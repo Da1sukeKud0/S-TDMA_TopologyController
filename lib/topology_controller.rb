@@ -1,5 +1,5 @@
-require 'command_line'
-require 'topology'
+require "command_line"
+require "topology"
 
 # This controller collects network topology information using LLDP.
 class TopologyController < Trema::Controller
@@ -38,11 +38,15 @@ class TopologyController < Trema::Controller
     updated_port = port_status.desc
     return if updated_port.local?
     if updated_port.down?
+      #puts "### topo_delpo"
+      puts updated_port
       @topology.delete_port updated_port
     elsif updated_port.up?
+      #puts "### topo_addpo"
+      ##puts updated_port
       @topology.add_port updated_port
     else
-      fail 'Unknown port status.'
+      fail "Unknown port status."
     end
   end
 
@@ -72,7 +76,7 @@ class TopologyController < Trema::Controller
       send_packet_out(
         dpid,
         actions: SendOutPort.new(port_number),
-        raw_data: lldp_binary_string(dpid, port_number)
+        raw_data: lldp_binary_string(dpid, port_number),
       )
     end
   end

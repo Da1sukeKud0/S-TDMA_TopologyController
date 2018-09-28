@@ -1,4 +1,4 @@
-require 'link'
+require "link"
 
 # Topology information containing the list of known switches, ports,
 # and links.
@@ -15,7 +15,7 @@ class Topology
     end
 
     def to_s
-      "#{format '%#x', dpid}:#{number}"
+      "#{format "%#x", dpid}:#{number}"
     end
   end
 
