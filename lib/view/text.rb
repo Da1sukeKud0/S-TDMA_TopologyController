@@ -48,5 +48,17 @@ module View
       status = objects.sort.map(&:to_s).join(', ')
       @logger.info "#{message}: #{status}"
     end
+
+    ## show all switches and links when all action
+    def modify_topology
+      ## show all switch
+      switches = topology.switches.map(&:to_hex))
+      show_status "All switches", switches
+      ## show all port
+      #topology.links.each do |each|
+      ## show all link
+      links = topology.links
+      show_status "All links", links
+    end
   end
 end
