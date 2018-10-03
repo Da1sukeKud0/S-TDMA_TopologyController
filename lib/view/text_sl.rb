@@ -39,8 +39,9 @@ module View
       show_all_link(port_a, port_b, topology)
     end
 
-    def add_host(port, topology)
-      puts "add_host"
+    def add_host(mac_address, port, topology)
+      ## original show_status for add_host
+      @logger.info "Host #{mac_address} added to Port #{port}"
     end
 
     def to_s
