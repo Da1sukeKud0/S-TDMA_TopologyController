@@ -21,6 +21,7 @@ class Topology
 
   attr_reader :links
   attr_reader :ports
+  attr_reader :hosts
 
   def initialize
     @observers = []
@@ -68,7 +69,6 @@ class Topology
   end
 
   def maybe_add_host(*host)
-    puts "add_host"
     return if @hosts.include?(host)
     @hosts << host
     mac_address, _ip_address, dpid, port_no = *host
