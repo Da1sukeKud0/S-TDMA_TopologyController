@@ -39,6 +39,10 @@ module View
       show_all_link(port_a, port_b, topology)
     end
 
+    def add_host(port, topology)
+      puts "add_host"
+    end
+
     def to_s
       "text mode"
     end

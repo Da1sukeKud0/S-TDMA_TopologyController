@@ -33,13 +33,12 @@ class TopologyController < Trema::Controller
   end
 
   def port_modify(_dpid, port_status)
-    #hoge
     #puts port_status.desc
     updated_port = port_status.desc
     return if updated_port.local?
     if updated_port.down?
       #puts "### topo_delpo"
-      puts updated_port
+      ##puts updated_port
       @topology.delete_port updated_port
     elsif updated_port.up?
       #puts "### topo_addpo"
@@ -58,7 +57,7 @@ class TopologyController < Trema::Controller
                                packet_in.source_ip_address,
                                dpid,
                                packet_in.in_port)
-      puts "hoge" #kys
+      puts "packet_in(not lldp)"
     end
   end
 
