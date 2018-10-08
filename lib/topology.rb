@@ -93,25 +93,26 @@ class Topology
     ret = []
     @links.each do |each|
       node = Hash.new { [].freeze }
-      node.store(:id_a,each.dpid_a)
-      node.store(:port_a,each.port_a)
-      node.store(:id_b,each.dpid_b)
-      node.store(:port_b,each.port_b)
+      node.store(:type, "switch2switch")
+      node.store(:id_a, each.dpid_a)
+      node.store(:port_a, each.port_a)
+      node.store(:id_b, each.dpid_b)
+      node.store(:port_b, each.port_b)
       ret.push(node)
     end
     @hosts.each do |key,value|
       node = Hash.new { [].freeze }
+      node.store(:type, "switch2host")
       ## Switch
-      node.store(:id_a,value[:dpid])
-      node.store(:port_a,value[:port_no])
+      node.store(:id_a, value[:dpid])
+      node.store(:port_a, value[:port_no])
       ## Host
-      node.store(:id_b,value[:mac_address])
+      node.store(:id_b, value[:mac_address])
       ret.push(node)
     end
     File.open("/tmp/topology.json", 'w') do |file|
       JSON.dump(ret, file)
     end
-    puts ret
   end
   
   private

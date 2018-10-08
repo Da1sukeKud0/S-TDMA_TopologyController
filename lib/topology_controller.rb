@@ -33,16 +33,11 @@ class TopologyController < Trema::Controller
   end
 
   def port_modify(_dpid, port_status)
-    #puts port_status.desc
     updated_port = port_status.desc
     return if updated_port.local?
     if updated_port.down?
-      #puts "### topo_delpo"
-      ##puts updated_port
       @topology.delete_port updated_port
     elsif updated_port.up?
-      #puts "### topo_addpo"
-      ##puts updated_port
       @topology.add_port updated_port
     else
       fail "Unknown port status."
@@ -58,7 +53,7 @@ class TopologyController < Trema::Controller
       # send_flow_mod_add(
       #   packet_in.datapath_id,
       #   match: ExactMatch.new(packet_in),
-      #   actions: SendOutPort.new(port_no)
+      #   actions: SendOutPort.new(packet_in.in_port)
       # )
     end
   end
