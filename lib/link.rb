@@ -11,12 +11,27 @@ class Link
   attr_reader :port_b
 
   def initialize(dpid, packet_in)
-    lldp = packet_in.data
-    @dpid_a = lldp.dpid ## packet_in.data.lldp.dpid
-    @dpid_b = dpid ##dest dpid
-    @port_a = lldp.port_number ## packet_in.data.lldp.port_number
-    @port_b = packet_in.in_port ## dest port
+      lldp = packet_in.data
+      @dpid_a = lldp.dpid ## packet_in.data.lldp.dpid
+      @dpid_b = dpid ##dest dpid
+      @port_a = lldp.port_number ## packet_in.data.lldp.port_number
+      @port_b = packet_in.in_port ## dest port
   end
+
+  # def initialize(dpid, packet_in, *hst_mac)
+  #   if hst_mac.length == 0
+  #     lldp = packet_in.data
+  #     @dpid_a = lldp.dpid ## packet_in.data.lldp.dpid
+  #     @dpid_b = dpid ##dest dpid
+  #     @port_a = lldp.port_number ## packet_in.data.lldp.port_number
+  #     @port_b = packet_in.in_port ## dest port
+  #   else
+  #     @dpid_a = hst_mac[0] ## packet_in.data.lldp.dpid
+  #     @dpid_b = dpid ##dest dpid
+  #     @port_a = packet_in.transport_source_port ## packet_in.data.lldp.port_number
+  #     @port_b = packet_in.in_port ## dest port
+  #   end
+  # end
 
   # rubocop:disable AbcSize
   # rubocop:disable CyclomaticComplexity

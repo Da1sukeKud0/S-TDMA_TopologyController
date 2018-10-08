@@ -1,6 +1,6 @@
 require "gli"
 require "pio"
-#require 'view/text'
+# require 'view/text'
 require "view/text_sl"
 
 # command-line options passed to topology-controller.rb

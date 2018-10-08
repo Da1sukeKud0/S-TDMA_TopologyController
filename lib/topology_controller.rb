@@ -55,6 +55,11 @@ class TopologyController < Trema::Controller
     else
       puts "packet_in(not lldp)"
       @topology.maybe_add_host(packet_in.source_mac, packet_in.source_ip_address, dpid, packet_in.in_port)
+      # send_flow_mod_add(
+      #   packet_in.datapath_id,
+      #   match: ExactMatch.new(packet_in),
+      #   actions: SendOutPort.new(port_no)
+      # )
     end
   end
 
