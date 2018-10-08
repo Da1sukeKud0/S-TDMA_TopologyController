@@ -27,7 +27,8 @@ class Topology
     @observers = []
     @ports = Hash.new { [].freeze }
     @links = []
-    @hosts = []
+    # @hosts = []
+    @hosts = Hash.new { [].freeze }
   end
 
   def add_observer(observer)
@@ -69,14 +70,32 @@ class Topology
   end
 
   def maybe_add_host(*host)
-    return if @hosts.include?(host)
-    @hosts << host
+    # return if @hosts.include?(host)
+    return if @hosts.key?(host[0])
+    # @hosts << host
+    hostStats = Hash.new { [].freeze }
+    hostStats.store(:mac_address, host[0])
+    hostStats.store(:ip_address, host[1])
+    hostStats.store(:dpid, host[2])
+    hostStats.store(:port_no, host[3])
+    @hosts[host[0]] = hostStats
     mac_address, _ip_address, dpid, port_no = *host
     maybe_send_handler :add_host, mac_address, Port.new(dpid, port_no), self
   end
 
   def route(ip_source_address, ip_destination_address)
     @graph.route(ip_source_address, ip_destination_address)
+  end
+
+  def show_links
+    ret = []
+    node = Hash.new { [].freeze }
+    @links.each do |each|
+      node.store(:id_a,each.dpid_a)
+      node.store(:port_a,each.dpid_b)
+      node.store(:id_b,each.port_a)
+      node.store(:port_b,each.port_b)
+    end
   end
 
   private
