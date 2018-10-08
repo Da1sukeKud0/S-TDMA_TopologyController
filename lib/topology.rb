@@ -82,13 +82,12 @@ class Topology
     @hosts[host[0]] = hostStats
     mac_address, _ip_address, dpid, port_no = *host
     maybe_send_handler :add_host, mac_address, Port.new(dpid, port_no), self
-    show_links
   end
-
+  
   def route(ip_source_address, ip_destination_address)
     @graph.route(ip_source_address, ip_destination_address)
   end
-
+  
   ## topologyをJSON形式で出力
   def show_links
     ret = []
@@ -114,9 +113,9 @@ class Topology
     end
     puts ret
   end
-
+  
   private
-
+  
   def maybe_delete_link(port)
     @links.each do |each|
       next unless each.connect_to?(port)
@@ -126,13 +125,14 @@ class Topology
       maybe_send_handler :delete_link, port_a, port_b, self
     end
   end
-
+  
   def maybe_send_handler(method, *args)
     @observers.each do |each|
       if each.respond_to?(:update)
         each.__send__ :update, method, args[0..-2], args.last
       end
       each.__send__ method, *args if each.respond_to?(method)
+      show_links
     end
   end
 end
