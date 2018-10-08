@@ -1,4 +1,5 @@
 require "link"
+require "json"
 
 # Topology information containing the list of known switches, ports,
 # and links.
@@ -68,7 +69,7 @@ class Topology
     port_b = Port.new(link.dpid_b, link.port_b)
     maybe_send_handler :add_link, port_a, port_b, self
   end
-
+  
   def maybe_add_host(*host)
     # return if @hosts.include?(host)
     return if @hosts.key?(host[0])
@@ -88,6 +89,7 @@ class Topology
     @graph.route(ip_source_address, ip_destination_address)
   end
 
+  ## topologyをJSON形式で出力
   def show_links
     ret = []
     @links.each do |each|
@@ -106,6 +108,9 @@ class Topology
       ## Host
       node.store(:id_b,value[:mac_address])
       ret.push(node)
+    end
+    File.open("/tmp/topology.json", 'w') do |file|
+      JSON.dump(ret, file)
     end
     puts ret
   end
