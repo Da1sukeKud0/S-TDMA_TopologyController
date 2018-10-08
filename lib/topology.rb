@@ -81,6 +81,7 @@ class Topology
     @hosts[host[0]] = hostStats
     mac_address, _ip_address, dpid, port_no = *host
     maybe_send_handler :add_host, mac_address, Port.new(dpid, port_no), self
+    show_links
   end
 
   def route(ip_source_address, ip_destination_address)
@@ -89,13 +90,24 @@ class Topology
 
   def show_links
     ret = []
-    node = Hash.new { [].freeze }
     @links.each do |each|
+      node = Hash.new { [].freeze }
       node.store(:id_a,each.dpid_a)
-      node.store(:port_a,each.dpid_b)
-      node.store(:id_b,each.port_a)
+      node.store(:port_a,each.port_a)
+      node.store(:id_b,each.dpid_b)
       node.store(:port_b,each.port_b)
+      ret.push(node)
     end
+    @hosts.each do |key,value|
+      node = Hash.new { [].freeze }
+      ## Switch
+      node.store(:id_a,value[:dpid])
+      node.store(:port_a,value[:port_no])
+      ## Host
+      node.store(:id_b,value[:mac_address])
+      ret.push(node)
+    end
+    puts ret
   end
 
   private
