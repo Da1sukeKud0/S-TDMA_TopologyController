@@ -42,6 +42,7 @@ module View
     def add_host(mac_address, port, topology)
       ## original show_status for add_host
       @logger.info "Host #{mac_address} added to Port #{port}"
+      puts "--------------------"
     end
 
     def to_s
@@ -57,17 +58,17 @@ module View
 
     ## show all switches and links when all action
     def show_all_switch(dpid, topology)
-      puts "--------------------"
       ## show all switch
       switches = topology.switches.map(&:to_hex)
       show_status "All switches", switches
+      puts "--------------------"
     end
 
     def show_all_link(port_a, port_b, topology)
-      puts "--------------------"
       ## show all link
       links = topology.links
       show_status "All links", links
+      puts "--------------------"
     end
 
     def show_status(message, objects)
