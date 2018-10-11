@@ -11,11 +11,11 @@ class Link
   attr_reader :port_b
 
   def initialize(dpid, packet_in)
-      lldp = packet_in.data
-      @dpid_a = lldp.dpid ## packet_in.data.lldp.dpid
-      @dpid_b = dpid ##dest dpid
-      @port_a = lldp.port_number ## packet_in.data.lldp.port_number
-      @port_b = packet_in.in_port ## dest port
+    lldp = packet_in.data
+    @dpid_a = lldp.dpid ## packet_in.data.lldp.dpid
+    @dpid_b = dpid ##dest dpid
+    @port_a = lldp.port_number ## packet_in.data.lldp.port_number
+    @port_b = packet_in.in_port ## dest port
   end
 
   # def initialize(dpid, packet_in, *hst_mac)

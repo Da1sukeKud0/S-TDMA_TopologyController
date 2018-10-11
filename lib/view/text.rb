@@ -24,17 +24,17 @@ module View
     end
 
     def add_link(port_a, port_b, topology)
-      link = format("%#x-%#x", *([port_a.dpid, port_b.dpid].sort))
+      link = format('%#x-%#x', *([port_a.dpid, port_b.dpid].sort))
       show_status "Link #{link} added", topology.links
     end
 
     def delete_link(port_a, port_b, topology)
-      link = format("%#x-%#x", *([port_a.dpid, port_b.dpid].sort))
+      link = format('%#x-%#x', *([port_a.dpid, port_b.dpid].sort))
       show_status "Link #{link} deleted", topology.links
     end
 
     def to_s
-      "text mode"
+      'text mode'
     end
 
     private
@@ -45,8 +45,8 @@ module View
     end
 
     def show_status(message, objects)
-      puts ""
-      status = objects.sort.map(&:to_s).join(", ")
+      puts ''
+      status = objects.sort.map(&:to_s).join(', ')
       @logger.info "#{message}: #{status}"
     end
   end
