@@ -1,5 +1,6 @@
-require "link"
-require "json"
+require 'link'
+require 'json'
+# require "dijkstra"
 
 # Topology information containing the list of known switches, ports,
 # and links.
@@ -16,7 +17,7 @@ class Topology
     end
 
     def to_s
-      "#{format "%#x", dpid}:#{number}"
+      "#{format '%#x', dpid}:#{number}"
     end
   end
 
@@ -127,9 +128,9 @@ class Topology
   ## topo
   ## @topoをJSON形式で出力する関数
   ##
-  def output_Topo
+  def topoToJSON
     puts @topo
-    File.open("/tmp/topology.json", "w") do |file|
+    File.open('/tmp/topology.json', 'w') do |file|
       JSON.dump(@topo, file)
     end
   end
@@ -141,13 +142,13 @@ class Topology
   ##
   def add_switch2switch_link(link)
     l = Hash.new { [].freeze }
-    l.store(:type, "switch2switch")
+    l.store(:type, 'switch2switch')
     l.store(:id_a, link.dpid_a)
     l.store(:port_a, link.port_a)
     l.store(:id_b, link.dpid_b)
     l.store(:port_b, link.port_b)
     @topo.push(l)
-    output_Topo
+    topoToJSON
   end
 
   ## topo
@@ -155,14 +156,14 @@ class Topology
   ##
   def add_switch2host_link(hostStats)
     l = Hash.new { [].freeze }
-    l.store(:type, "switch2host")
+    l.store(:type, 'switch2host')
     ## Switch
     l.store(:id_a, hostStats[:dpid])
     l.store(:port_a, hostStats[:port_no])
     ## Host (s2hの場合はid_portはなし)
     l.store(:id_b, hostStats[:mac_address])
     @topo.push(l)
-    output_Topo
+    topoToJSON
   end
 
   ## topo
@@ -172,16 +173,14 @@ class Topology
     for each in @topo do
       ## id_a, port_aおよびid_b, port_bと一致した場合に
       ## @topoからリンクを削除
-      if ((each[:id_a] == port.dpid) && (each[:port_a] == port.number))
+      if (each[:id_a] == port.dpid) && (each[:port_a] == port.number)
         @topo -= [each]
         ## s2hの場合は@hostsからホストを削除
-        if (each[:type] == "switch2host")
-          @hosts.delete(each[:id_b])
-        end
-        output_Topo
+        @hosts.delete(each[:id_b]) if each[:type] == 'switch2host'
+        topoToJSON
       elsif (each[:id_b] == port.dpid) && (each[:port_b] == port.number)
         @topo -= [each]
-        output_Topo
+        topoToJSON
       end
     end
   end
