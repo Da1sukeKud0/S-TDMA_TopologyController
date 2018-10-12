@@ -1,6 +1,6 @@
 require 'link'
 require 'json'
-# require "dijkstra"
+require 'routing'
 
 # Topology information containing the list of known switches, ports,
 # and links.
