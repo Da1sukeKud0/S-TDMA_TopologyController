@@ -15,7 +15,7 @@ Topology discovery controller in Trema.
 Prerequisites
 -------------
 
-* Ruby 2.0.0 or higher ([RVM][rvm]).
+* Ruby 2.3.7
 * [Open vSwitch][openvswitch] (`apt-get install openvswitch-switch`).
 * [Graphviz][graphviz] (`apt-get install graphviz`)
 
@@ -66,6 +66,12 @@ To turn switch ports on/off,
 ```
 $ ./bin/trema port_down --switch 0x1 --port 1
 $ ./bin/trema port_up --switch 0x1 --port 1
+```
+
+TO add host to switch,
+
+```
+$ ./bin/trema send_packets -n 1 -s h1 -d h2
 ```
 
 To view the current topology graphically,
