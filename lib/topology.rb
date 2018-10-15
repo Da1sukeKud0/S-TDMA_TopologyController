@@ -1,6 +1,6 @@
-require 'link'
-require 'json'
-require 'routing'
+require "link"
+require "json"
+require "routing"
 
 # Topology information containing the list of known switches, ports,
 # and links.
@@ -17,7 +17,7 @@ class Topology
     end
 
     def to_s
-      "#{format '%#x', dpid}:#{number}"
+      "#{format "%#x", dpid}:#{number}"
     end
   end
 
@@ -130,9 +130,10 @@ class Topology
   ##
   def topoToJSON
     puts @topo
-    File.open('/tmp/topology.json', 'w') do |file|
+    File.open("/tmp/topology.json", "w") do |file|
       JSON.dump(@topo, file)
     end
+    getGraph(1,1)
   end
 
   private
@@ -142,7 +143,7 @@ class Topology
   ##
   def add_switch2switch_link(link)
     l = Hash.new { [].freeze }
-    l.store(:type, 'switch2switch')
+    l.store(:type, "switch2switch")
     l.store(:id_a, link.dpid_a)
     l.store(:port_a, link.port_a)
     l.store(:id_b, link.dpid_b)
@@ -156,7 +157,7 @@ class Topology
   ##
   def add_switch2host_link(hostStats)
     l = Hash.new { [].freeze }
-    l.store(:type, 'switch2host')
+    l.store(:type, "switch2host")
     ## Switch
     l.store(:id_a, hostStats[:dpid])
     l.store(:port_a, hostStats[:port_no])
@@ -170,13 +171,13 @@ class Topology
   ## s2s,s2hのリンクを追加する関数
   ##
   def delete_switch2switch_link(port)
-    for each in @topo do
+    for each in @topo
       ## id_a, port_aおよびid_b, port_bと一致した場合に
       ## @topoからリンクを削除
       if (each[:id_a] == port.dpid) && (each[:port_a] == port.number)
         @topo -= [each]
         ## s2hの場合は@hostsからホストを削除
-        @hosts.delete(each[:id_b]) if each[:type] == 'switch2host'
+        @hosts.delete(each[:id_b]) if each[:type] == "switch2host"
         topoToJSON
       elsif (each[:id_b] == port.dpid) && (each[:port_b] == port.number)
         @topo -= [each]

@@ -1,3 +1,5 @@
+require "json"
+
 class Graph
   attr_reader :graph, :nodes, :previous, :distance # getter
   INFINITY = 1 << 64
@@ -67,10 +69,11 @@ class Graph
     @solved_paths.push("src" => src, "dst" => dst, "path" => @path, "cost" => actual_distance)
     # end
     output_cli
-    @graph_paths
+    @solved_paths
   end
 
   private
+
   def connect_graph(src, dst, weight)
     if !graph.key?(src)
       graph[src] = {dst => weight}
@@ -98,15 +101,6 @@ class Graph
   end
 end
 
-## private
-## jsonを展開し読み込み
-##
-private def getJSON
-File.open("test/topology.json") do |file|
-  return JSON.load(file)
-end
-end
-
 ## test
 ## native source code test
 ##
@@ -128,6 +122,12 @@ end
 ## JSON test
 ##
 def testJSON
+  def getJSON
+    File.open("/share/home/kudo/trema/topology/test/topology.json") do |file|
+      return JSON.load(file)
+    end
+  end
+
   topo = getJSON
   puts "-- topology --"
   puts topo
