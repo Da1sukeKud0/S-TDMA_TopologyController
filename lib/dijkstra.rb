@@ -9,17 +9,10 @@ class Dijkstra
     @nodes = []
   end
 
-  ## sub
-  ## ノードの存在確認(簡易。同名のIDが存在するかどうか)
-  ##
-  # def include?(node)
-  #   return @nodes.include?(node)
-  # end
-
   ## main
   ## 無向グラフを作成
   ##
-  def add_edge(src, dst, weight)
+  def add_edge(src, dst, weight = 1)
     src = src.to_s
     dst = dst.to_s
     connect_graph(src, dst, weight) ## src -> dst
@@ -61,6 +54,13 @@ class Dijkstra
   def shortest_path(src, dst)
     src = src.to_s
     dst = dst.to_s
+    puts "nodes are below"
+    puts nodes
+    ## src,dst各ノードの存在確認
+    if (!nodes.include?(src) || !nodes.include?(dst))
+      puts "such node is not exist."
+      return false
+    end
     ## 経路の解を格納
     @solved_paths = []
     @src = src
@@ -87,7 +87,12 @@ class Dijkstra
     else
       graph[src][dst] = weight
     end
-    nodes.push(src) unless nodes.include?(src)
+    # nodes.push(src) unless nodes.include?(src)
+    # puts "node #{src} is added" unless nodes.include?(src)
+    if !nodes.include?(src)
+      puts "node #{src} is added"
+      nodes.push(src)
+    end
   end
 
   def find_path(dst)
@@ -106,54 +111,4 @@ class Dijkstra
   def output_path
     return @path
   end
-end
-
-## test
-## native source code test
-##
-def test
-  g = Graph.new
-  g.add_edge("a", "c", 7)
-  g.add_edge("a", "e", 14)
-  g.add_edge("a", "f", 9)
-  g.add_edge("c", "d", 15)
-  g.add_edge("c", "f", 10)
-  g.add_edge("d", "f", 11)
-  g.add_edge("d", "b", 6)
-  g.add_edge("f", "e", 2)
-  g.add_edge("e", "b", 9)
-  g.shortest_paths("a", "b")
-end
-
-## test
-## JSON test
-##
-def testJSON
-  def getJSON
-    File.open("/share/home/kudo/trema/topology/test/topology.json") do |file|
-      return JSON.load(file)
-    end
-  end
-
-  topo = getJSON
-  puts "-- topology --"
-  puts topo
-  puts ""
-
-  puts "-- hostname => mac_address --"
-  g = Dijkstra.new
-  mac_table = Hash.new
-  cost = [2, 3, 4, 6, 6, 5, 2, 2, 4] ## for test
-  for each in topo
-    if (each["type"] == "switch2host") ## s2h
-      mac_table["h" + (mac_table.size + 1).to_s] = {"id_a" => each["id_a"], "mac_address" => each["id_b"]}
-    else ## s2s
-      g.add_edge(each["id_a"], each["id_b"], cost.shift)
-    end
-  end
-  puts mac_table
-  puts ""
-
-  puts "-- dijk --"
-  g.shortest_path(1, 5)
 end
