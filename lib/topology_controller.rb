@@ -1,7 +1,6 @@
-require 'command_line'
-require 'topology'
+require "command_line"
+require "topology"
 
-# This controller collects network topology information using LLDP.
 class TopologyController < Trema::Controller
   timer_event :flood_lldp_frames, interval: 1.sec
 
@@ -24,7 +23,6 @@ class TopologyController < Trema::Controller
   end
 
   def features_reply(dpid, features_reply)
-    # puts features_reply.physical_ports.select(&:up?)
     @topology.add_switch dpid, features_reply.physical_ports.select(&:up?)
   end
 
@@ -40,7 +38,7 @@ class TopologyController < Trema::Controller
     elsif updated_port.up?
       @topology.add_port updated_port
     else
-      fail 'Unknown port status.'
+      fail "Unknown port status."
     end
   end
 
@@ -48,7 +46,7 @@ class TopologyController < Trema::Controller
     if packet_in.lldp?
       @topology.maybe_add_link Link.new(dpid, packet_in)
     else
-      puts 'packet_in(not LLDP)'
+      puts "packet_in(not LLDP)"
       @topology.maybe_add_host(packet_in.source_mac, packet_in.source_ip_address, dpid, packet_in.in_port)
       ##ipとportの紐付け
       # send_flow_mod_add(
@@ -73,7 +71,7 @@ class TopologyController < Trema::Controller
       send_packet_out(
         dpid,
         actions: SendOutPort.new(port_number),
-        raw_data: lldp_binary_string(dpid, port_number)
+        raw_data: lldp_binary_string(dpid, port_number),
       )
     end
   end

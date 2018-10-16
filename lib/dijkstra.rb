@@ -1,6 +1,6 @@
 require "json"
 
-class Graph
+class Dijkstra
   attr_reader :graph, :nodes, :previous, :distance # getter
   INFINITY = 1 << 64
 
@@ -8,6 +8,13 @@ class Graph
     @graph = {} ## {node=>{dst=>cost}}
     @nodes = []
   end
+
+  ## sub
+  ## ノードの存在確認(簡易。同名のIDが存在するかどうか)
+  ##
+  # def include?(node)
+  #   return @nodes.include?(node)
+  # end
 
   ## main
   ## 無向グラフを作成
@@ -134,7 +141,7 @@ def testJSON
   puts ""
 
   puts "-- hostname => mac_address --"
-  g = Graph.new
+  g = Dijkstra.new
   mac_table = Hash.new
   cost = [2, 3, 4, 6, 6, 5, 2, 2, 4] ## for test
   for each in topo
