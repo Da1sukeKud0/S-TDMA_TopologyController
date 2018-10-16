@@ -24,6 +24,7 @@ class Topology
   attr_reader :links
   attr_reader :ports
   attr_reader :hosts
+  attr_reader :graph
 
   def initialize
     @observers = []
@@ -34,6 +35,8 @@ class Topology
     @hosts = Hash.new { [].freeze }
     ## topo[]: all links (s2s and s2h)
     @topo = []
+    ## 経路決定アルゴリズムへのトポロジ受け渡し、経路探索を行うクラス
+    @graph = Graph.new
   end
 
   def add_observer(observer)
@@ -92,51 +95,25 @@ class Topology
     maybe_send_handler :add_host, mac_address, Port.new(dpid, port_no), self
   end
 
-  def route(ip_source_address, ip_destination_address)
-    @graph.route(ip_source_address, ip_destination_address)
+  def getRoute(src_id, dst_id)
+    @graph.getRoute(src_id, dst_id)
   end
 
-  ## topologyをJSON形式で出力
-  # def show_links
-  #   start_time = Time.now ## benchmarc
-  #   ret = []
-  #   @links.each do |each|
-  #     l = Hash.new { [].freeze }
-  #     l.store(:type, "switch2switch")
-  #     l.store(:id_a, each.dpid_a)
-  #     l.store(:port_a, each.port_a)
-  #     l.store(:id_b, each.dpid_b)
-  #     l.store(:port_b, each.port_b)
-  #     ret.push(l)
-  #   end
-  #   @hosts.each do |key, value|
-  #     l = Hash.new { [].freeze }
-  #     l.store(:type, "switch2host")
-  #     ## Switch
-  #     l.store(:id_a, value[:dpid])
-  #     l.store(:port_a, value[:port_no])
-  #     ## Host
-  #     l.store(:id_b, value[:mac_address])
-  #     ret.push(l)
-  #   end
-  #   File.open("/tmp/topology.json", "w") do |file|
-  #     JSON.dump(ret, file)
-  #   end
-  #   puts "time: #{Time.now - start_time}"
-  # end
+  def setGraph
+    @graph.setGraph(@topo)
+  end
+
+  private
 
   ## topo
-  ## @topoをJSON形式で出力する関数
+  ## @topoをJSON形式で出力する
   ##
   def topoToJSON
     puts @topo
     File.open("/tmp/topology.json", "w") do |file|
       JSON.dump(@topo, file)
     end
-    getGraph(1,1)
   end
-
-  private
 
   ## topo
   ## s2sのリンクを追加する関数
@@ -149,7 +126,7 @@ class Topology
     l.store(:id_b, link.dpid_b)
     l.store(:port_b, link.port_b)
     @topo.push(l)
-    topoToJSON
+    # topoToJSON
   end
 
   ## topo
@@ -164,7 +141,7 @@ class Topology
     ## Host (s2hの場合はid_portはなし)
     l.store(:id_b, hostStats[:mac_address])
     @topo.push(l)
-    topoToJSON
+    # topoToJSON
   end
 
   ## topo
@@ -178,10 +155,10 @@ class Topology
         @topo -= [each]
         ## s2hの場合は@hostsからホストを削除
         @hosts.delete(each[:id_b]) if each[:type] == "switch2host"
-        topoToJSON
+        # topoToJSON
       elsif (each[:id_b] == port.dpid) && (each[:port_b] == port.number)
         @topo -= [each]
-        topoToJSON
+        # topoToJSON
       end
     end
   end
