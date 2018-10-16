@@ -46,7 +46,7 @@ class TopologyController < Trema::Controller
     if packet_in.lldp?
       @topology.maybe_add_link Link.new(dpid, packet_in)
     else
-      puts "packet_in(not LLDP)"
+      puts "packet_in (not LLDP)"
       @topology.maybe_add_host(packet_in.source_mac, packet_in.source_ip_address, dpid, packet_in.in_port)
       ##ipとportの紐付け
       # send_flow_mod_add(
@@ -54,6 +54,7 @@ class TopologyController < Trema::Controller
       #   match: Match.new(destination_ip_address: packet_in.source_ip_address),
       #   actions: SendOutPort.new(packet_in.in_port)
       # )
+      @topology.setGraph
     end
   end
 
