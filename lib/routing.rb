@@ -36,11 +36,11 @@ class Graph
     for each in topo
       if (each[:type] == "switch2host")
         ## s2hリンクの場合
-        ##@mac_table["h" + (@mac_table.size + 1).to_s] = {"id_a" => each["id_a"], "mac_address" => each["id_b"]}
+        ##@mac_table["h" + (@mac_table.size + 1).to_s] = {"id_a" => each["id_a"], "mac_address" => each["mac_address"]}
       else
         ## s2sリンクの場合
         # @map.add_edge(each[:id_a], each[:id_b], cost.shift) ## for test
-        @map.add_edge(each[:id_a], each[:id_b])
+        @map.add_edge(each[:id_a], each[:id_b]) ## all cost is 0
         puts "#{each[:id_a]} to #{each[:id_b]} link add...?"
       end
     end

@@ -139,7 +139,7 @@ class Topology
     l.store(:id_a, hostStats[:dpid])
     l.store(:port_a, hostStats[:port_no])
     ## Host (s2hの場合はid_portはなし)
-    l.store(:id_b, hostStats[:mac_address])
+    l.store(:mac_address, hostStats[:mac_address])
     @topo.push(l)
     # topoToJSON
   end
@@ -154,7 +154,7 @@ class Topology
       if (each[:id_a] == port.dpid) && (each[:port_a] == port.number)
         @topo -= [each]
         ## s2hの場合は@hostsからホストを削除
-        @hosts.delete(each[:id_b]) if each[:type] == "switch2host"
+        @hosts.delete(each[:mac_address]) if each[:type] == "switch2host"
         # topoToJSON
       elsif (each[:id_b] == port.dpid) && (each[:port_b] == port.number)
         @topo -= [each]
