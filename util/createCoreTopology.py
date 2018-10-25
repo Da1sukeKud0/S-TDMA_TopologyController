@@ -17,11 +17,11 @@ def main():
 
     # create switch.
     makeSwitch(switchNum)
-    makeHost(switchNum)
+    makeHost(2)
     makeLink(switchNum)
 
     # set output file and write
-    path = "test/linear_" + str(switchNum) + ".conf"
+    path = "test/core_" + str(switchNum) + ".conf"
     if os.path.exists(path):
         os.remove(path)
     with open(path, mode='w') as file:
@@ -46,16 +46,16 @@ def makeHost(num):
 
 
 def makeLink(num):
-    for n in range(1, num):
-        src = "0x" + str(n)
-        dst = "0x" + str(n+1)
+    for n in range(2, num+1):
+        src = "0x1"
+        dst = "0x" + str(n)
         cmd_s2s = "link '" + src + "', '" + dst + "'"
         conf.append(cmd_s2s)
-        hst = "h" + str(n)
-        cmd_s2h = "link '" + src + "', '" + hst + "'"
-        conf.append(cmd_s2h)
-    src = "0x" + str(num)
-    hst = "h" + str(num)
+    src = "0x1"
+    hst = "h1"
+    cmd_s2h = "link '" + src + "', '" + hst + "'"
+    conf.append(cmd_s2h)
+    hst = "h2"
     cmd_s2h = "link '" + src + "', '" + hst + "'"
     conf.append(cmd_s2h)
     conf.append("")
