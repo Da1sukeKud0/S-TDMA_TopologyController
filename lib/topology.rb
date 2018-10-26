@@ -95,17 +95,23 @@ class Topology
     maybe_send_handler :add_host, mac_address, Port.new(dpid, port_no), self
   end
 
+  ## アクセサ
   def getRoute(src_id, dst_id)
     @graph.getRoute(src_id, dst_id)
   end
 
+  ## アクセサ
   def setGraph
     @graph.setGraph(@topo)
   end
 
+  ## アクセサ
+  def get_topo
+    return @topo
+  end
+
   private
 
-  ## topo
   ## @topoをJSON形式で出力する
   ##
   def topoToJSON
@@ -115,8 +121,7 @@ class Topology
     end
   end
 
-  ## topo
-  ## s2sのリンクを追加する関数
+  ## @topoにs2sのリンクを追加する関数
   ##
   def add_switch2switch_link(link)
     l = Hash.new { [].freeze }
@@ -126,11 +131,10 @@ class Topology
     l.store(:id_b, link.dpid_b)
     l.store(:port_b, link.port_b)
     @topo.push(l)
-    # topoToJSON
+    # topo2json
   end
 
-  ## topo
-  ## s2hのリンクを追加する関数
+  ## @topoにs2hのリンクを追加する関数
   ##
   def add_switch2host_link(hostStats)
     l = Hash.new { [].freeze }
@@ -141,11 +145,10 @@ class Topology
     ## Host (s2hの場合はid_portはなし)
     l.store(:mac_address, hostStats[:mac_address])
     @topo.push(l)
-    # topoToJSON
+    # topo2json
   end
 
-  ## topo
-  ## s2s,s2hのリンクを追加する関数
+  ## @topoからs2s,s2hのリンクを削除する関数
   ##
   def delete_switch2switch_link(port)
     for each in @topo
@@ -155,10 +158,10 @@ class Topology
         @topo -= [each]
         ## s2hの場合は@hostsからホストを削除
         @hosts.delete(each[:mac_address]) if each[:type] == "switch2host"
-        # topoToJSON
+        # topo2json
       elsif (each[:id_b] == port.dpid) && (each[:port_b] == port.number)
         @topo -= [each]
-        # topoToJSON
+        # topo2json
       end
     end
   end
