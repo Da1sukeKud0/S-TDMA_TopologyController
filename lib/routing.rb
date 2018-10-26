@@ -1,7 +1,9 @@
 require "json"
 require "/share/home/kudo/trema/topology/lib/dijkstra"
 
+##
 ## 経路決定アルゴリズムへのトポロジ受け渡し、経路探索を行うクラス
+##
 class Graph
   attr_reader :map
   attr_reader :mac_table
