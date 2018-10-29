@@ -32,7 +32,7 @@ class RTC
   end
 end
 
-def Test
+def test
   rtc = RTC.new(1, 2, 3)
   # rtc.setSchedule(4, 5)
   rtc.getSchedule

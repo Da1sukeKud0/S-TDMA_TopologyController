@@ -3,7 +3,7 @@ require "/share/home/kudo/trema/topology/lib/dijkstra"
 ## test
 ## native source code test
 ##
-def test
+def test_native
   g = Dijkstra.new
   g.add_edge(1, 2, 5)
   g.add_edge(1, 3, 4)
@@ -30,7 +30,7 @@ end
 ## test
 ## JSON test
 ##
-def testJSON
+def test
   def getJSON
     File.open("/share/home/kudo/trema/topology/test/topology.json") do |file|
       return JSON.load(file)
