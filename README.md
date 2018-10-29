@@ -1,20 +1,17 @@
-topology
+topologyManager
 ========
-[![Build Status](http://img.shields.io/travis/trema/topology/develop.svg?style=flat)][travis]
-[![Code Climate](http://img.shields.io/codeclimate/github/trema/topology.svg?style=flat)][codeclimate]
-[![Coverage Status](http://img.shields.io/codeclimate/coverage/github/trema/topology.svg?style=flat)][codeclimate]
-[![Dependency Status](http://img.shields.io/gemnasium/trema/topology.svg?style=flat)][gemnasium]
+[![Build Status](http://img.shields.io/travis/Da1sukeKud0/topology/develop.svg?style=flat)][travis]
+[![Code Climate](http://img.shields.io/codeclimate/github/Da1sukeKud0/topology.svg?style=flat)][codeclimate]
+[![Coverage Status](http://img.shields.io/codeclimate/coverage/github/Da1sukeKud0/topology.svg?style=flat)][codeclimate]
+[![Dependency Status](http://img.shields.io/gemnasium/Da1sukeKud0/topology.svg?style=flat)][gemnasium]
 
-Topology discovery controller in Trema.
-
-[travis]: http://travis-ci.org/trema/topology
-[codeclimate]: https://codeclimate.com/github/trema/topology
+[travis]: https://travis-ci.org/Da1sukeKud0/topology
+[codeclimate]: https://codeclimate.com/github/Da1sukeKud0/topology
 [gemnasium]: https://gemnasium.com/trema/topology
 
 
-Prerequisites
+実行環境
 -------------
-
 * Ruby 2.3.7
 * [Open vSwitch][openvswitch] (`apt-get install openvswitch-switch`).
 * [Graphviz][graphviz] (`apt-get install graphviz`)
@@ -24,64 +21,41 @@ Prerequisites
 [graphviz]: http://www.graphviz.org/
 
 
-Install
+インストール
 -------
-
 ```
-$ git clone https://github.com/trema/topology.git
+$ git clone https://github.com/Da1sukeKud0/topology.git
 $ cd topology
 $ bundle install --binstubs
 ```
 
 
-Play
+使用方法
 ----
 
-Run the controller `topology_controller.rb` with `trema run` by
-passing a topology configuration file with `-c` option, then it
-outputs the current topology information in ASCII format.
-
-The triangle topology configuration with three switches:
-
+コントローラの起動（`-c`オプションにより任意の初期トポロジを設定）
 ```
-$ ./bin/trema run ./lib/topology_controller.rb -c triangle.conf
+$ ./bin/trema run ./lib/topology_controller.rb -c test/linear.conf
 ```
 
-The full mesh with 10 switches:
-
-```
-$ ./bin/trema run ./lib/topology_controller.rb -c fullmesh.conf
-```
-
-In another terminal, you can make changes to the current topology by
-adding or deleting switches with `trema stop` and `trema start` commands.
-
+スイッチの起動/停止
 ```
 $ ./bin/trema stop 0x1
 $ ./bin/trema start 0x1
 ```
 
-To turn switch ports on/off,
-
+スイッチポートの起動/停止
 ```
 $ ./bin/trema port_down --switch 0x1 --port 1
 $ ./bin/trema port_up --switch 0x1 --port 1
 ```
 
-TO add host to switch,
-
+ホストをスイッチに追加（実際にはスイッチもポートも存在するが以下によるPacket_Inでリンクが検出される）
 ```
 $ ./bin/trema send_packets -n 1 -s h1 -d h2
 ```
 
-To view the current topology graphically,
-
-```
-$ ./bin/trema run ./lib/topology_controller.rb -c fullmesh.conf -- graphviz /tmp/topology.png
-```
-
-To change the LLDP destination MAC,
-
+宛先MACアドレスの変更
 ```
 $ ./bin/trema run ./lib/topology_controller.rb -c fullmesh.conf -- --destination_mac 11:22:33:44:55:66
 ```
