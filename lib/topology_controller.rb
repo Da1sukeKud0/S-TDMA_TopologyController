@@ -1,5 +1,5 @@
 require "command_line"
-require "topology"
+require "TopologyManager"
 
 class TopologyController < Trema::Controller
   timer_event :flood_lldp_frames, interval: 1.sec
@@ -9,7 +9,7 @@ class TopologyController < Trema::Controller
   def start(args)
     @command_line = CommandLine.new(logger)
     @command_line.parse(args)
-    @topology = Topology.new
+    @topology = TopologyManager.new
     @topology.add_observer @command_line.view
     logger.info "Topology started (#{@command_line.view})."
   end

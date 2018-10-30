@@ -4,7 +4,7 @@ require "~/trema/topology/lib/routing"
 
 # Topology information containing the list of known switches, ports,
 # and links.
-class Topology
+class TopologyManager
   Port = Struct.new(:dpid, :port_no) do
     alias_method :number, :port_no
 
