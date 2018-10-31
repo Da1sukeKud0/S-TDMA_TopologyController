@@ -54,7 +54,6 @@ class TopologyController < Trema::Controller
       #   match: Match.new(destination_ip_address: packet_in.source_ip_address),
       #   actions: SendOutPort.new(packet_in.in_port)
       # )
-      @topology.setGraph
     end
   end
 
