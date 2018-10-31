@@ -29,12 +29,10 @@ class TopologyManager
   def initialize
     @observers = []
     @ports = Hash.new { [].freeze }
-    ## links[]: all links (only s2s)
-    @links = []
-    ## hosts{}: keyはホストのmac_address
-    @hosts = Hash.new { [].freeze }
-    ## topo[]: all links (s2s and s2h)
-    @topo = []
+    @links = [] ## links[]: all links (only s2s)
+    @hosts = Hash.new { [].freeze } ## hosts{}: keyはホストのmac_address
+    # @mac_table = Hash.new ## ホストの識別名(h1,h2,,,hn)とmac_addressの対応
+    @topo = [] ## topo[]: all links (s2s and s2h)
     ## 経路決定アルゴリズムへのトポロジ受け渡し、経路探索を行うクラス
     # @graph = Graph.new
   end
@@ -82,7 +80,7 @@ class TopologyManager
   def maybe_add_host(*host)
     return if @hosts.key?(host[0])
     ## @hostsへのHostの格納
-    h = Host.new(@hosts.size + 1, host[0], host[1], host[2], host[3])
+    h = Host.new(host[0], host[1], host[2], host[3])
     @hosts[host[0]] = h ## key=mac_addressで格納
     puts "h is #{h}"
     puts "hosts is #{@hosts}"
