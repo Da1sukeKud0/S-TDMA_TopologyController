@@ -14,11 +14,9 @@ topologyManager
 -------------
 * Ruby 2.3.7
 * [Open vSwitch][openvswitch] (`apt-get install openvswitch-switch`).
-* [Graphviz][graphviz] (`apt-get install graphviz`)
 
 [rvm]: https://rvm.io/
 [openvswitch]: https://openvswitch.org/
-[graphviz]: http://www.graphviz.org/
 
 
 インストール
