@@ -1,6 +1,6 @@
 require "link"
 require "json"
-require "~/trema/topology/lib/routing"
+require "~/trema/topology/lib/Host"
 
 # Topology information containing the list of known switches, ports,
 # and links.
@@ -36,7 +36,7 @@ class TopologyManager
     ## topo[]: all links (s2s and s2h)
     @topo = []
     ## 経路決定アルゴリズムへのトポロジ受け渡し、経路探索を行うクラス
-    @graph = Graph.new
+    # @graph = Graph.new
   end
 
   def add_observer(observer)
@@ -80,29 +80,16 @@ class TopologyManager
   end
 
   def maybe_add_host(*host)
-    # return if @hosts.include?(host)
     return if @hosts.key?(host[0])
-    # @hosts << host
-    hostStats = Hash.new { [].freeze }
-    hostStats.store(:mac_address, host[0])
-    hostStats.store(:ip_address, host[1])
-    hostStats.store(:dpid, host[2])
-    hostStats.store(:port_no, host[3])
-    @hosts[host[0]] = hostStats
-    ## topo
-    add_switch2host_link hostStats
+    ## @hostsへのHostの格納
+    h = Host.new(@hosts.size + 1, host[0], host[1], host[2], host[3])
+    @hosts[host[0]] = h ## key=mac_addressで格納
+    puts "h is #{h}"
+    puts "hosts is #{@hosts}"
+    ## @topoへの追加
+    add_switch2host_link h 
     mac_address, _ip_address, dpid, port_no = *host
     maybe_send_handler :add_host, mac_address, Port.new(dpid, port_no), self
-  end
-
-  ## アクセサ
-  def getRoute(src_id, dst_id)
-    @graph.getRoute(src_id, dst_id)
-  end
-
-  ## アクセサ
-  def setGraph
-    @graph.setGraph(@topo)
   end
 
   ## アクセサ
@@ -126,26 +113,25 @@ class TopologyManager
   def add_switch2switch_link(link)
     l = Hash.new { [].freeze }
     l.store(:type, "switch2switch")
-    l.store(:id_a, link.dpid_a)
-    l.store(:port_a, link.port_a)
-    l.store(:id_b, link.dpid_b)
-    l.store(:port_b, link.port_b)
+    ## swtich_a,switch_b各々へdpidとport_noの格納
+    l.store(:switch_a, {dpid: link.dpid_a, port_no: link.port_a})
+    l.store(:switch_b, {dpid: link.dpid_b, port_no: link.port_b})
     @topo.push(l)
     # topo2json
   end
 
   ## @topoにs2hのリンクを追加する関数
   ##
-  def add_switch2host_link(hostStats)
+  def add_switch2host_link(hostStats) ##hostStatsはHost型
     l = Hash.new { [].freeze }
     l.store(:type, "switch2host")
     ## Switch
-    l.store(:id_a, hostStats[:dpid])
-    l.store(:port_a, hostStats[:port_no])
-    ## Host (s2hの場合はid_portはなし)
-    l.store(:mac_address, hostStats[:mac_address])
+    l.store(:switch_a, {dpid: hostStats.dpid, port_no: hostStats.port_no})
+    ## Host 
+    l.store(:mac_address, hostStats.mac_address)
     @topo.push(l)
     # topo2json
+    puts "l is #{l}"
   end
 
   ## @topoからs2s,s2hのリンクを削除する関数
@@ -154,12 +140,14 @@ class TopologyManager
     for each in @topo
       ## id_a, port_aおよびid_b, port_bと一致した場合に
       ## @topoからリンクを削除
-      if (each[:id_a] == port.dpid) && (each[:port_a] == port.number)
+      if (each[:switch_a][:dpid] == port.dpid) && (each[:switch_a][:port_no] == port.number)
         @topo -= [each]
         ## s2hの場合は@hostsからホストを削除
         @hosts.delete(each[:mac_address]) if each[:type] == "switch2host"
+        puts "delete_host"
+        puts "hosts is #{@hosts}"
         # topo2json
-      elsif (each[:id_b] == port.dpid) && (each[:port_b] == port.number)
+      elsif (each[:switch_b][:dpid] == port.dpid) && (each[:switch_a][:port_no] == port.number)
         @topo -= [each]
         # topo2json
       end
