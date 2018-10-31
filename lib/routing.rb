@@ -1,5 +1,5 @@
 require "json"
-require "/share/home/kudo/trema/topology/lib/dijkstra"
+require "~/trema/topology/lib/dijkstra"
 
 ##
 ## 経路決定アルゴリズムへのトポロジ受け渡し、経路探索を行うクラス
