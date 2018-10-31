@@ -87,7 +87,7 @@ class TopologyManager
     puts "h is #{h}"
     puts "hosts is #{@hosts}"
     ## @topoへの追加
-    add_switch2host_link h 
+    add_switch2host_link h
     mac_address, _ip_address, dpid, port_no = *host
     maybe_send_handler :add_host, mac_address, Port.new(dpid, port_no), self
   end
@@ -127,8 +127,8 @@ class TopologyManager
     l.store(:type, "switch2host")
     ## Switch
     l.store(:switch_a, {dpid: hostStats.dpid, port_no: hostStats.port_no})
-    ## Host 
-    l.store(:mac_address, hostStats.mac_address)
+    ## Host
+    l.store(:host, hostStats)
     @topo.push(l)
     # topo2json
     puts "l is #{l}"
@@ -138,8 +138,7 @@ class TopologyManager
   ##
   def delete_switch2switch_link(port)
     for each in @topo
-      ## id_a, port_aおよびid_b, port_bと一致した場合に
-      ## @topoからリンクを削除
+      ## switch_aおよびbとdpid,portの組み合わせが一致した場合に@topoからリンクを削除
       if (each[:switch_a][:dpid] == port.dpid) && (each[:switch_a][:port_no] == port.number)
         @topo -= [each]
         ## s2hの場合は@hostsからホストを削除
