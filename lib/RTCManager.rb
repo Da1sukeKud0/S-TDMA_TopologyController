@@ -16,8 +16,8 @@ class RTCManager
 
   ## 実時間通信要求に対しスケジューリング可否を判定
   ## 可能ならrtcListを更新しtrue 不可ならfalse
-  def add_rtc?(src_id, dst_id, period, topo)
-    rtc = RTC.new(src_id, dst_id, period)
+  def add_rtc?(src, dst, period, topo)
+    rtc = RTC.new(src, dst, period)
     routeSchedule(rtc, topo)
     periodSchedule(rtc)
     if rtc.schedulable? ## スケジューリング可能
@@ -35,7 +35,7 @@ class RTCManager
   def routeSchedule(rtc, topo)
     setGraph(topo)
     if (@rtcList.size == 0)
-      # @map.shortest_path()
+      @map.shortest_path(@hst_table.invert(rtc.src), @hst_table.invert(rtc.dst))
     else
       @rtcList.each do |each|
       end
@@ -60,6 +60,7 @@ class RTCManager
 
   ## 時刻スケジューリング：他の実時間通信の周期と被らないように新規タイムスロットを設定
   def periodSchedule(rtc)
+    
   end
 end
 

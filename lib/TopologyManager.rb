@@ -129,7 +129,7 @@ class TopologyManager
     l.store(:host, hostStats)
     @topo.push(l)
     # topo2json
-    puts "l is #{l}"
+    puts "topo is #{@topo}"
   end
 
   ## @topoからs2s,s2hのリンクを削除する関数

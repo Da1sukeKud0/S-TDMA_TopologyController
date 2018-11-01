@@ -2,14 +2,14 @@
 ## 送信元/宛先idおよび通信周期は初期入力
 ## スケジューリング可能であれば通信経路とタイムスロットIDを獲得
 class RTC
-  attr_reader :src_id
-  attr_reader :dst_id
+  attr_reader :src
+  attr_reader :dst
   attr_reader :period
   attr_reader :timeslot_id
 
-  def initialize(src_id, dst_id, period)
-    @src_id = src_id ## Host型の予定
-    @dst_id = dst_id ## Host型の予定
+  def initialize(src, dst, period)
+    @src = src ## Host型の予定
+    @dst = dst ## Host型の予定
     @period = period ## 通信周期（タイムスロット単位）
     @schedule = nil ## スケジューリング可能な場合にsetScheduleで格納
   end

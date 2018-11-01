@@ -1,4 +1,4 @@
-require "/share/home/kudo/trema/topology/lib/dijkstra"
+require "~/trema/topology/lib/dijkstra"
 
 ## test
 ## native source code test
