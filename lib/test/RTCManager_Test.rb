@@ -1,4 +1,5 @@
 require "~/trema/topology/lib/RTCManager"
+require "~/trema/topology/lib/Host"
 def main
 
 end

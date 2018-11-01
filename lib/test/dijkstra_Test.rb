@@ -1,4 +1,5 @@
 require "~/trema/topology/lib/dijkstra"
+require "~/trema/topology/lib/Host"
 
 ## test
 ## native source code test
@@ -32,7 +33,7 @@ end
 ##
 def test
   def getJSON
-    File.open("/share/home/kudo/trema/topology/test/topology.json") do |file|
+    File.open("/share/home/kudo/trema/topology/lib/test/resource/topology.json") do |file|
       return JSON.load(file)
     end
   end
@@ -60,7 +61,44 @@ def test
   g.shortest_path(1, 5)
 end
 
+def test_2
+  def getJSON
+    File.open("/share/home/kudo/trema/topology/lib/test/resource/topology_dijkstra_test2.json") do |file|
+      return JSON.load(file)
+    end
+  end
+
+  topo = getJSON
+  puts "-- topology --"
+  puts topo
+  puts ""
+
+  puts "-- hostname => mac_address --"
+  @map = Dijkstra.new
+  @hst_table = Hash.new
+  for each in topo
+    if (each["type"] == "switch2host")
+      # s2hリンクの場合
+      hst_id = "h" + (@hst_table.size + 1).to_s
+      @hst_table[hst_id] = each["host"]
+      @map.add_edge(each["switch_a"]["dpid"], hst_id, 0) ## cost is 0
+    else
+      ## s2sリンクの場合
+      @map.add_edge(each["switch_a"]["dpid"], each["switch_b"]["dpid"]) ## cost is 1
+    end
+  end
+  puts @hst_table
+  puts @map.graph
+  puts ""
+
+  puts "-- dijk --"
+  @map.shortest_path("h1", "h5")
+  ## 1-2間のリンクを削除
+  @map.delete_edge(1, 2)
+  @map.shortest_path("h1", "h5")
+end
+
 ## test runner
 if __FILE__ == $0
-  test
+  test_2
 end

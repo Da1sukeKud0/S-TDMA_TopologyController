@@ -25,6 +25,7 @@ class TopologyManager
   attr_reader :ports
   attr_reader :hosts
   attr_reader :graph
+  attr_reader :topo
 
   def initialize
     @observers = []
@@ -88,18 +89,14 @@ class TopologyManager
     add_switch2host_link h
     mac_address, _ip_address, dpid, port_no = *host
     maybe_send_handler :add_host, mac_address, Port.new(dpid, port_no), self
-  end
-
-  ## アクセサ
-  def get_topo
-    return @topo
+    topo2json
   end
 
   private
 
   ## @topoをJSON形式で出力する
   ##
-  def topoToJSON
+  def topo2json
     puts @topo
     File.open("/tmp/topology.json", "w") do |file|
       JSON.dump(@topo, file)
