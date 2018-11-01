@@ -48,12 +48,12 @@ class RTCManager
         ## s2hリンクの場合
         hst_id = "h" + (@mac_table.size + 1).to_s
         @hst_table[hst_id] = each[:host]
-        @map.add_edge(each[:switch_a].dpid, hst_id)
-        puts "#{each[:switch_a].dpid} to #{hst_id} link add"
+        @map.add_edge(each[:switch_a][:dpid], hst_id, 0) ## cost 0
+        puts "#{each[:switch_a][:dpid]} to #{hst_id} link add"
       else
         ## s2sリンクの場合
-        @map.add_edge(each[:switch_a].dpid, each[:switch_b].dpid) ## all cost is 1
-        puts "#{each[:switch_a].dpid} to #{each[:switch_b].dpid} link add"
+        @map.add_edge(each[:switch_a][:dpid], each[:switch_b][:dpid]) ## cost 1
+        puts "#{each[:switch_a][:dpid]} to #{each[:switch_b][:dpid]} link add"
       end
     end
   end
