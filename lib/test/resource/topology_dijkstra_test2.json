@@ -1,0 +1,149 @@
+[
+    {
+        "type": "switch2switch",
+        "switch_a": {
+            "dpid": 3,
+            "port_no": 4
+        },
+        "switch_b": {
+            "dpid": 6,
+            "port_no": "1"
+        }
+    },
+    {
+        "type": "switch2switch",
+        "switch_a": {
+            "dpid": 6,
+            "port_no": 2
+        },
+        "switch_b": {
+            "dpid": 4,
+            "port_no": "3"
+        }
+    },
+    {
+        "type": "switch2switch",
+        "switch_a": {
+            "dpid": 4,
+            "port_no": 1
+        },
+        "switch_b": {
+            "dpid": 1,
+            "port_no": "3"
+        }
+    },
+    {
+        "type": "switch2switch",
+        "switch_a": {
+            "dpid": 5,
+            "port_no": 1
+        },
+        "switch_b": {
+            "dpid": 2,
+            "port_no": "3"
+        }
+    },
+    {
+        "type": "switch2switch",
+        "switch_a": {
+            "dpid": 3,
+            "port_no": 3
+        },
+        "switch_b": {
+            "dpid": 4,
+            "port_no": "2"
+        }
+    },
+    {
+        "type": "switch2switch",
+        "switch_a": {
+            "dpid": 3,
+            "port_no": 2
+        },
+        "switch_b": {
+            "dpid": 2,
+            "port_no": "2"
+        }
+    },
+    {
+        "type": "switch2switch",
+        "switch_a": {
+            "dpid": 3,
+            "port_no": 1
+        },
+        "switch_b": {
+            "dpid": 1,
+            "port_no": "2"
+        }
+    },
+    {
+        "type": "switch2switch",
+        "switch_a": {
+            "dpid": 6,
+            "port_no": 3
+        },
+        "switch_b": {
+            "dpid": 5,
+            "port_no": "2"
+        }
+    },
+    {
+        "type": "switch2switch",
+        "switch_a": {
+            "dpid": 1,
+            "port_no": 1
+        },
+        "switch_b": {
+            "dpid": 2,
+            "port_no": "1"
+        }
+    },
+    {
+        "type": "switch2host",
+        "switch_a": {
+            "dpid": 1,
+            "port_no": "4"
+        },
+        "host": "#<Host:0x0000000001509140>"
+    },
+    {
+        "type": "switch2host",
+        "switch_a": {
+            "dpid": 2,
+            "port_no": "4"
+        },
+        "host": "#<Host:0x0000000001d62ff8>"
+    },
+    {
+        "type": "switch2host",
+        "switch_a": {
+            "dpid": 3,
+            "port_no": "5"
+        },
+        "host": "#<Host:0x0000000001c15588>"
+    },
+    {
+        "type": "switch2host",
+        "switch_a": {
+            "dpid": 4,
+            "port_no": "4"
+        },
+        "host": "#<Host:0x0000000002018ba8>"
+    },
+    {
+        "type": "switch2host",
+        "switch_a": {
+            "dpid": 5,
+            "port_no": "3"
+        },
+        "host": "#<Host:0x000000000142c038>"
+    },
+    {
+        "type": "switch2host",
+        "switch_a": {
+            "dpid": 6,
+            "port_no": "4"
+        },
+        "host": "#<Host:0x00000000013d5198>"
+    }
+]

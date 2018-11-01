@@ -1,0 +1,159 @@
+#hosts mac_address: Host
+{
+    #<Pio: :Mac: 29219440 "29:09:97:e2:7c:cf">=>#<Host: 0x00000000037b8dd0 @mac_address=#<Pio: :Mac: 29219440 "29:09:97:e2:7c:cf">, @ip_address=#<Pio: :IPv4Address: 0x00000000037ba1d0 @value=#<IPAddr: IPv4: 192.168.0.1/255.255.255.255>>, @dpid=1, @port_no=4>, 
+    #<Pio: :Mac: 24585960 "9f:40:96:8d:f8:54">=>#<Host: 0x0000000002ebd668 @mac_address=#<Pio: :Mac: 24585960 "9f:40:96:8d:f8:54">, @ip_address=#<Pio: :IPv4Address: 0x0000000002ec2280 @value=#<IPAddr: IPv4: 192.168.0.2/255.255.255.255>>, @dpid=2, @port_no=4>, 
+    #<Pio: :Mac: 29752480 "18:3e:73:b3:9a:fb">=>#<Host: 0x00000000038ab8f0 @mac_address=#<Pio: :Mac: 29752480 "18:3e:73:b3:9a:fb">, @ip_address=#<Pio: :IPv4Address: 0x00000000038be950 @value=#<IPAddr: IPv4: 192.168.0.3/255.255.255.255>>, @dpid=3, @port_no=5>, 
+    #<Pio: :Mac: 29035980 "ea:5f:db:23:3a:d0">=>#<Host: 0x00000000037568b0 @mac_address=#<Pio: :Mac: 29035980 "ea:5f:db:23:3a:d0">, @ip_address=#<Pio: :IPv4Address: 0x00000000037604f0 @value=#<IPAddr: IPv4: 192.168.0.4/255.255.255.255>>, @dpid=4, @port_no=4>, 
+    #<Pio: :Mac: 28500120 "72:5a:ce:11:a3:30">=>#<Host: 0x0000000003655d08 @mac_address=#<Pio: :Mac: 28500120 "72:5a:ce:11:a3:30">, @ip_address=#<Pio: :IPv4Address: 0x00000000036572c0 @value=#<IPAddr: IPv4: 192.168.0.5/255.255.255.255>>, @dpid=5, @port_no=3>, 
+    #<Pio: :Mac: 27686400 "3d:f0:b1:2d:7c:aa">=>#<Host: 0x00000000034cc9c8 @mac_address=#<Pio: :Mac: 27686400 "3d:f0:b1:2d:7c:aa">, @ip_address=#<Pio: :IPv4Address: 0x00000000034cde68 @value=#<IPAddr: IPv4: 192.168.0.6/255.255.255.255>>, @dpid=6, @port_no=4>
+}
+#@topo []
+[
+    {
+        :type=>"switch2switch",
+        :switch_a=>{
+            :dpid=>5,
+            :port_no=>1
+        },
+        :switch_b=>{
+            :dpid=>2,
+            :port_no=>3
+        }
+    },
+    {
+        :type=>"switch2switch",
+        :switch_a=>{
+            :dpid=>2,
+            :port_no=>1
+        },
+        :switch_b=>{
+            :dpid=>1,
+            :port_no=>1
+        }
+    },
+    {
+        :type=>"switch2switch",
+        :switch_a=>{
+            :dpid=>4,
+            :port_no=>3
+        },
+        :switch_b=>{
+            :dpid=>6,
+            :port_no=>2
+        }
+    },
+    {
+        :type=>"switch2switch",
+        :switch_a=>{
+            :dpid=>1,
+            :port_no=>3
+        },
+        :switch_b=>{
+            :dpid=>4,
+            :port_no=>1
+        }
+    },
+    {
+        :type=>"switch2switch",
+        :switch_a=>{
+            :dpid=>2,
+            :port_no=>2
+        },
+        :switch_b=>{
+            :dpid=>3,
+            :port_no=>2
+        }
+    },
+    {
+        :type=>"switch2switch",
+        :switch_a=>{
+            :dpid=>5,
+            :port_no=>2
+        },
+        :switch_b=>{
+            :dpid=>6,
+            :port_no=>3
+        }
+    },
+    {
+        :type=>"switch2switch",
+        :switch_a=>{
+            :dpid=>1,
+            :port_no=>2
+        },
+        :switch_b=>{
+            :dpid=>3,
+            :port_no=>1
+        }
+    },
+    {
+        :type=>"switch2switch",
+        :switch_a=>{
+            :dpid=>3,
+            :port_no=>4
+        },
+        :switch_b=>{
+            :dpid=>6,
+            :port_no=>1
+        }
+    },
+    {
+        :type=>"switch2switch",
+        :switch_a=>{
+            :dpid=>4,
+            :port_no=>2
+        },
+        :switch_b=>{
+            :dpid=>3,
+            :port_no=>3
+        }
+    },
+    {
+        :type=>"switch2host",
+        :switch_a=>{
+            :dpid=>1,
+            :port_no=>4
+        },
+        :host=>#<Host: 0x00000000037b8dd0 @mac_address=#<Pio: :Mac: 29219440 "29:09:97:e2:7c:cf">, @ip_address=#<Pio: :IPv4Address: 0x00000000037ba1d0 @value=#<IPAddr: IPv4: 192.168.0.1/255.255.255.255>>, @dpid=1, @port_no=4>
+    },
+    {
+        :type=>"switch2host",
+        :switch_a=>{
+            :dpid=>2,
+            :port_no=>4
+        },
+        :host=>#<Host: 0x0000000002ebd668 @mac_address=#<Pio: :Mac: 24585960 "9f:40:96:8d:f8:54">, @ip_address=#<Pio: :IPv4Address: 0x0000000002ec2280 @value=#<IPAddr: IPv4: 192.168.0.2/255.255.255.255>>, @dpid=2, @port_no=4>
+    },
+    {
+        :type=>"switch2host",
+        :switch_a=>{
+            :dpid=>3,
+            :port_no=>5
+        },
+        :host=>#<Host: 0x00000000038ab8f0 @mac_address=#<Pio: :Mac: 29752480 "18:3e:73:b3:9a:fb">, @ip_address=#<Pio: :IPv4Address: 0x00000000038be950 @value=#<IPAddr: IPv4: 192.168.0.3/255.255.255.255>>, @dpid=3, @port_no=5>
+    },
+    {
+        :type=>"switch2host",
+        :switch_a=>{
+            :dpid=>4,
+            :port_no=>4
+        },
+        :host=>#<Host: 0x00000000037568b0 @mac_address=#<Pio: :Mac: 29035980 "ea:5f:db:23:3a:d0">, @ip_address=#<Pio: :IPv4Address: 0x00000000037604f0 @value=#<IPAddr: IPv4: 192.168.0.4/255.255.255.255>>, @dpid=4, @port_no=4>
+    },
+    {
+        :type=>"switch2host",
+        :switch_a=>{
+            :dpid=>5,
+            :port_no=>3
+        },
+        :host=>#<Host: 0x0000000003655d08 @mac_address=#<Pio: :Mac: 28500120 "72:5a:ce:11:a3:30">, @ip_address=#<Pio: :IPv4Address: 0x00000000036572c0 @value=#<IPAddr: IPv4: 192.168.0.5/255.255.255.255>>, @dpid=5, @port_no=3>
+    },
+    {
+        :type=>"switch2host",
+        :switch_a=>{
+            :dpid=>6,
+            :port_no=>4
+        },
+        :host=>#<Host: 0x00000000034cc9c8 @mac_address=#<Pio: :Mac: 27686400 "3d:f0:b1:2d:7c:aa">, @ip_address=#<Pio: :IPv4Address: 0x00000000034cde68 @value=#<IPAddr: IPv4: 192.168.0.6/255.255.255.255>>, @dpid=6, @port_no=4>
+    }
+]

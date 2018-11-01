@@ -1,0 +1,101 @@
+[
+    {
+        "type": "switch2switch",
+        "id_a": 4,
+        "port_a": 1,
+        "id_b": 1,
+        "port_b": "3"
+    },
+    {
+        "type": "switch2switch",
+        "id_a": 4,
+        "port_a": 2,
+        "id_b": 3,
+        "port_b": "3"
+    },
+    {
+        "type": "switch2switch",
+        "id_a": 6,
+        "port_a": 3,
+        "id_b": 5,
+        "port_b": "2"
+    },
+    {
+        "type": "switch2switch",
+        "id_a": 5,
+        "port_a": 1,
+        "id_b": 2,
+        "port_b": "3"
+    },
+    {
+        "type": "switch2switch",
+        "id_a": 4,
+        "port_a": 3,
+        "id_b": 6,
+        "port_b": "2"
+    },
+    {
+        "type": "switch2switch",
+        "id_a": 2,
+        "port_a": 1,
+        "id_b": 1,
+        "port_b": "1"
+    },
+    {
+        "type": "switch2switch",
+        "id_a": 6,
+        "port_a": 1,
+        "id_b": 3,
+        "port_b": "4"
+    },
+    {
+        "type": "switch2switch",
+        "id_a": 3,
+        "port_a": 2,
+        "id_b": 2,
+        "port_b": "2"
+    },
+    {
+        "type": "switch2switch",
+        "id_a": 3,
+        "port_a": 1,
+        "id_b": 1,
+        "port_b": "2"
+    },
+    {
+        "type": "switch2host",
+        "id_a": 1,
+        "port_a": "4",
+        "id_b": "3b:21:8d:20:30:17"
+    },
+    {
+        "type": "switch2host",
+        "id_a": 2,
+        "port_a": "4",
+        "id_b": "9b:dd:e0:4a:a5:b8"
+    },
+    {
+        "type": "switch2host",
+        "id_a": 3,
+        "port_a": "5",
+        "id_b": "de:5f:7c:70:d7:0d"
+    },
+    {
+        "type": "switch2host",
+        "id_a": 4,
+        "port_a": "4",
+        "id_b": "ad:e9:5d:d6:13:08"
+    },
+    {
+        "type": "switch2host",
+        "id_a": 5,
+        "port_a": "3",
+        "id_b": "a9:8c:40:53:e3:cb"
+    },
+    {
+        "type": "switch2host",
+        "id_a": 6,
+        "port_a": "4",
+        "id_b": "c4:a1:a3:98:15:40"
+    }
+]
