@@ -14,9 +14,29 @@ class Dijkstra
   ##
   def add_edge(src, dst, weight = 1)
     src = src.to_s
-    dst = dst.to_s
+    if (dst.class != String)
+      dst = dst.to_s
+    end
     connect_graph(src, dst, weight) ## src -> dst
     connect_graph(dst, src, weight) ## dst -> src
+  end
+
+  def delete_edge(src, dst)
+    src = src.to_s
+    if (dst.class != String)
+      dst = dst.to_s
+    end
+    unconnect_graph(src, dst)
+    unconnect_graph(dst, src)
+  end
+
+  def unconnect_graph(src, dst)
+    ## graphから削除
+    ## graph[src]が空ならnode削除
+    if graph.key?(src)
+      graph[src].delete(dst)
+      graph.delete(src) if (graph[src].size == 0)
+    end
   end
 
   ## main
@@ -54,29 +74,32 @@ class Dijkstra
   def shortest_path(src, dst)
     src = src.to_s
     dst = dst.to_s
-    puts "nodes are below"
-    puts nodes
     ## src,dst各ノードの存在確認
     if (!nodes.include?(src) || !nodes.include?(dst))
       puts "such node is not exist."
       return false
     end
     ## 経路の解を格納
-    @solved_paths = []
+    # @solved_paths = []
     @src = src
     dijkstra src
     # nodes.each do |dst|
     @path = []
     find_path dst
+    #pathの変換
+    newpath = []
+    for i in Range.new(1, (@path.size - 1))
+      newpath.push({src: @path[i - 1], dst: @path[i]})
+    end
     if (@distance[dst] != INFINITY)
       actual_distance = @distance[dst]
     else
       actual_distance = "no path"
     end
-    @solved_paths.push("src" => src, "dst" => dst, "path" => @path, "cost" => actual_distance)
+    @solved_path = {src: src, dst: dst, route: newpath, cost: actual_distance}
     # end
-    output_cli
-    @solved_paths
+    puts @solved_path
+    @solved_path
   end
 
   private
@@ -102,13 +125,10 @@ class Dijkstra
     @path << dst
   end
 
-  def output_cli
-    @solved_paths.each do |each|
-      puts each
-    end
-  end
+  # def output_cli
+  #   @solved_paths.each do |each|
+  #     puts each
+  #   end
+  # end
 
-  def output_path
-    return @path
-  end
 end
