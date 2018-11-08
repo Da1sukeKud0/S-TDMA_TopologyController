@@ -84,7 +84,6 @@ class TopologyManager
     h = Host.new(host[0], host[1], host[2], host[3])
     @hosts[host[0]] = h ## key=mac_addressで格納
     puts "h is #{h}"
-    puts "hosts is #{@hosts}"
     ## @topoへの追加
     add_switch2host_link h
     mac_address, _ip_address, dpid, port_no = *host
@@ -139,7 +138,6 @@ class TopologyManager
         ## s2hの場合は@hostsからホストを削除
         @hosts.delete(each[:mac_address]) if each[:type] == "switch2host"
         puts "delete_host"
-        puts "hosts is #{@hosts}"
         # topo2json
       elsif (each[:switch_b][:dpid] == port.dpid) && (each[:switch_a][:port_no] == port.number)
         @topo -= [each]

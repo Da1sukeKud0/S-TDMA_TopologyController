@@ -93,7 +93,10 @@ def test_2
 
   puts "-- dijk --"
   @map.shortest_path("h1", "h5")
+  puts ""
+
   ## 1-2間のリンクを削除
+  puts "-- edge delete --"
   @map.delete_edge(1, 2)
   @map.shortest_path("h1", "h5")
 end
