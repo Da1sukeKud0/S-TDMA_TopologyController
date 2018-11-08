@@ -1,5 +1,6 @@
 require "command_line"
 require "TopologyManager"
+require "RTCManager"
 
 class TopologyController < Trema::Controller
   timer_event :flood_lldp_frames, interval: 1.sec
@@ -12,6 +13,9 @@ class TopologyController < Trema::Controller
     @topology = TopologyManager.new
     @topology.add_observer @command_line.view
     logger.info "Topology started (#{@command_line.view})."
+    @rtcManager = RTCManager.new
+    @test_counter = 1
+    @test_mac_table = Hash.new
   end
 
   def add_observer(observer)
@@ -54,6 +58,18 @@ class TopologyController < Trema::Controller
       #   match: Match.new(destination_ip_address: packet_in.source_ip_address),
       #   actions: SendOutPort.new(packet_in.in_port)
       # )
+      @test_mac_table[@test_counter] = packet_in.source_mac
+      if (@test_counter == 7)
+        hsrc = @topology.hosts[@test_mac_table[1]]
+        hdst = @topology.hosts[@test_mac_table[6]]
+        @rtcManager.add_rtc?(hsrc, hdst, 2, @topology.topo)
+      end
+      if (@test_counter == 8)
+        hsrc = @topology.hosts[@test_mac_table[4]]
+        hdst = @topology.hosts[@test_mac_table[5]]
+        @rtcManager.add_rtc?(hsrc, hdst, 5, @topology.topo)
+      end
+      @test_counter += 1
     end
   end
 
