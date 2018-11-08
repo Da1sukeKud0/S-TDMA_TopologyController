@@ -22,3 +22,4 @@ doc/
 .vscode
 .rufo
 .tags
+lib/test/mini_Test.rb
