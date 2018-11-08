@@ -5,32 +5,21 @@ class RTC
   attr_reader :src
   attr_reader :dst
   attr_reader :period
-  attr_reader :timeslot_id
+  attr_reader :initial_phase
+  attr_reader :route
 
   def initialize(src, dst, period)
     @src = src ## Host型の予定
     @dst = dst ## Host型の予定
     @period = period ## 通信周期（タイムスロット単位）
-    @schedule = nil ## スケジューリング可能な場合にsetScheduleで格納
   end
 
   ## 通信経路とタイムスロットIDの格納
-  def setSchedule(timeslot_id, route)
-    @schedule = Hash.new { [].freeze }
-    @schedule.store(:timeslot_id, timeslot_id)
-    @schedule.store(:route, route)
-  end
-
-  ## 通信経路とタイムスロットIDの取得
-  def getSchedule
-    unless @schedule.nil?
-      puts @schedule
-    end
-  end
-
-  ## スケジューリングの可否を確認
-  def schedulable?
-    return !@schedule.nil?
+  def setSchedule(initial_phase, route)
+    @initial_phase = initial_phase
+    @route = route
+    puts "ip= #{initial_phase}, route= #{route}"
+    return self
   end
 end
 
