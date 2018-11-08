@@ -28,6 +28,7 @@ class Dijkstra
     end
     unconnect_graph(src, dst)
     unconnect_graph(dst, src)
+    puts "delete#{src}to#{dst}"
   end
 
   def unconnect_graph(src, dst)
@@ -86,20 +87,19 @@ class Dijkstra
     # nodes.each do |dst|
     @path = []
     find_path dst
-    #pathの変換
-    newpath = []
-    for i in Range.new(1, (@path.size - 1))
-      newpath.push({src: @path[i - 1], dst: @path[i]})
-    end
-    if (@distance[dst] != INFINITY)
+    if (@distance[dst] != INFINITY) ##ルーティング可能
       actual_distance = @distance[dst]
-    else
-      actual_distance = "no path"
+      #pathの変換
+      @solved_path = []
+      for i in Range.new(1, (@path.size - 1))
+        @solved_path.push({src: @path[i - 1], dst: @path[i]})
+      end
+    else ##ルーティング不可
+      return false
     end
-    @solved_path = {src: src, dst: dst, route: newpath, cost: actual_distance}
     # end
     puts @solved_path
-    @solved_path
+    return @solved_path
   end
 
   private
