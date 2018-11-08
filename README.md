@@ -1,5 +1,6 @@
 topologyManager
 ========
+<!--
 [![Build Status](http://img.shields.io/travis/Da1sukeKud0/topology/develop.svg?style=flat)][travis]
 [![Code Climate](http://img.shields.io/codeclimate/github/Da1sukeKud0/topology.svg?style=flat)][codeclimate]
 [![Coverage Status](http://img.shields.io/codeclimate/coverage/github/Da1sukeKud0/topology.svg?style=flat)][codeclimate]
@@ -8,7 +9,7 @@ topologyManager
 [travis]: https://travis-ci.org/Da1sukeKud0/topology
 [codeclimate]: https://codeclimate.com/github/Da1sukeKud0/topology
 [gemnasium]: https://gemnasium.com/trema/topology
-
+-->
 
 実行環境
 -------------
