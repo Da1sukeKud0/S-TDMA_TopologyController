@@ -1,6 +1,6 @@
 require "link"
 require "json"
-require "~/trema/topology/lib/Host"
+require "~/trema/topology/lib/host"
 
 # Topology information containing the list of known switches, ports,
 # and links.

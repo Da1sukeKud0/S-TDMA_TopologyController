@@ -1,5 +1,5 @@
 require "~/trema/topology/lib/dijkstra"
-require "~/trema/topology/lib/Host"
+require "~/trema/topology/lib/host"
 
 ## test
 ## native source code test

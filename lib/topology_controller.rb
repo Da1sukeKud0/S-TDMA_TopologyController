@@ -1,6 +1,6 @@
 require "command_line"
-require "TopologyManager"
-require "RTCManager"
+require "topology_manager"
+require "rtc_manager"
 
 class TopologyController < Trema::Controller
   timer_event :flood_lldp_frames, interval: 1.sec

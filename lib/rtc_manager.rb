@@ -1,4 +1,4 @@
-require "~/trema/topology/lib/RTC"
+require "~/trema/topology/lib/rtc"
 require "~/trema/topology/lib/dijkstra"
 ##
 ##　実時間通信要求に対し経路スケジューリングおよび時刻スケジューリングを行う
