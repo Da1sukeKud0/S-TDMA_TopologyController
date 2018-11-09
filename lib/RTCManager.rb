@@ -20,7 +20,8 @@ class RTCManager
   ## 可能ならrtcListを更新しtrue 不可ならfalse
   def add_rtc?(src, dst, period, topo)
     rtc = RTC.new(src, dst, period)
-    if !routeSchedule(rtc, topo)
+    initial_phase = 0 ##初期位相0に設定
+    if !routeSchedule(rtc, topo, initial_phase)
       puts "####################"
       puts "####################"
       puts "####### false ######"
@@ -34,15 +35,17 @@ class RTCManager
 
   private
 
-  ## 経路スケジューリング：既存の実時間通信との非重複経路を探索
-  ## 可能ならrtcにroute, initial_phaseを追加しtrue, 不可ならfalse
-  def routeSchedule(rtc, topo)
-    ##既存のrtcがない場合
-    if (@timeslot_table.all? { |key, each| each.size == 0 })
+  ## 既存の実時間通信との非重複経路を探索
+  ## 存在する場合はrtcにroute, initial_phaseを追加しtrue
+  ## 存在しない場合は初期位相を変化させ再帰呼出し
+  ## それでも非重複経路が存在しない場合はfalse
+  def routeSchedule(rtc, topo, initial_phase)
+    if (@timeslot_table.all? { |key, each| each.size == 0 }) ##既存のrtcがない場合
       map = setGraph(topo)
       route = map.shortest_path(@hst_table.key(rtc.src), @hst_table.key(rtc.dst))
-      if (route) ##ルートあり
-        initial_phase = 0 ##初期位相0に設定
+      if (route) ##経路が存在する場合は使用するスロットにrtcを格納
+        # rtc_tmp = RTC.new(rtc.src, rtc.dst, rtc.period)
+        # rtc_tmp.setSchedule(initial_phase, val)
         rtc.setSchedule(initial_phase, route)
         for i in Range.new(initial_phase, 9)
           if ((i + initial_phase) % rtc.period == 0)
@@ -57,7 +60,7 @@ class RTCManager
       @timeslot_table.each do |timeslot, exist_rtcs|
         ## initial_phase==0として、timeslotが被るrtcがあれば抽出し使用ルートを削除してから探索
         puts "tsl=#{timeslot}"
-        if (timeslot % rtc.period == 0)
+        if ((timeslot - initial_phase) % rtc.period == 0)
           map_tmp = setGraph(topo)
           if (exist_rtcs.size != 0) ## 同一タイムスロット内にrtcが既存
             puts "既存のRTCあるよ"
@@ -72,14 +75,17 @@ class RTCManager
           route = map_tmp.shortest_path(@hst_table.key(rtc.src), @hst_table.key(rtc.dst))
           if (route) ## ルーティング可能なら一時変数に格納
             route_list[timeslot] = route
-          else
+          else ## ルーティング不可なら初期位相を変化させ再探索
+            if (initial_phase < rtc.period)
+              initial_phase += 1
+              routeSchedule(rtc, topo, initial_phase)
+            end
             return false
           end
         end
       end
       ## ここでfalseでない時点で0~9のうち使用する全てのタイムスロットでルーティングが可能
       route_list.each do |key, val|
-        initial_phase = 0
         rtc_tmp = RTC.new(rtc.src, rtc.dst, rtc.period)
         rtc_tmp.setSchedule(initial_phase, val)
         @timeslot_table[key].push(rtc_tmp)
@@ -108,10 +114,6 @@ class RTCManager
       end
     end
     return map
-  end
-
-  ## 時刻スケジューリング：他の実時間通信の周期と被らないように新規タイムスロットを設定
-  def periodSchedule(rtc)
   end
 end
 
