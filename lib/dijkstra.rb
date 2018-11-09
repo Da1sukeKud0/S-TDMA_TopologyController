@@ -59,6 +59,7 @@ class Dijkstra
       end
       break if @distance[u] == INFINITY
       unvisited_node -= [u]
+      return false if (!graph[u]) ## test
       graph[u].keys.each do |vertex|
         alt = @distance[u] + graph[u][vertex]
         if alt < @distance[vertex]
@@ -76,7 +77,7 @@ class Dijkstra
     src = src.to_s
     dst = dst.to_s
     ## src,dst各ノードの存在確認
-    if (!nodes.include?(src) || !nodes.include?(dst))
+    if (!@nodes.include?(src) || !@nodes.include?(dst))
       puts "such node is not exist."
       return false
     end
