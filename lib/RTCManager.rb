@@ -21,16 +21,20 @@ class RTCManager
   def add_rtc?(src, dst, period, topo)
     rtc = RTC.new(src, dst, period)
     initial_phase = 0 ##初期位相0に設定
-    if !routeSchedule(rtc, topo, initial_phase)
-      puts "####################"
-      puts "####################"
-      puts "####### false ######"
-      puts "####################"
-      puts "####################"
-      return false
+    while (initial_phase < period)
+      if (routeSchedule(rtc, topo, initial_phase))
+        puts @timeslot_table
+        return true
+      else
+        initial_phase += 1
+      end
     end
-    puts @timeslot_table
-    return true
+    puts "####################"
+    puts "####################"
+    puts "####### false ######"
+    puts "####################"
+    puts "####################"
+    return false
   end
 
   private
@@ -76,10 +80,16 @@ class RTCManager
           if (route) ## ルーティング可能なら一時変数に格納
             route_list[timeslot] = route
           else ## ルーティング不可なら初期位相を変化させ再探索
-            if (initial_phase < rtc.period)
-              initial_phase += 1
-              routeSchedule(rtc, topo, initial_phase)
-            end
+            # if (initial_phase == 0)
+            #   while (initial_phase < rtc.period)
+            #     initial_phase += 1
+            #     puts "再探索 初期位相は#{initial_phase}"
+            #     if (routeSchedule(rtc, topo, initial_phase))
+            #       return true
+            #     end
+            #     break if ((initial_phase - 1)==rtc.period)
+            #   end
+            # end
             return false
           end
         end
