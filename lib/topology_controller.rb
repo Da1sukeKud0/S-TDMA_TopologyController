@@ -69,6 +69,21 @@ class TopologyController < Trema::Controller
         hdst = @topology.hosts[@test_mac_table[5]]
         @rtcManager.add_rtc?(hsrc, hdst, 5, @topology.topo)
       end
+      # if (@test_counter == 8)
+      #   hsrc = @topology.hosts[@test_mac_table[1]]
+      #   hdst = @topology.hosts[@test_mac_table[6]]
+      #   @rtcManager.add_rtc?(hsrc, hdst, 3, @topology.topo)
+      # end
+      # if (@test_counter == 9)
+      #   hsrc = @topology.hosts[@test_mac_table[1]]
+      #   hdst = @topology.hosts[@test_mac_table[6]]
+      #   @rtcManager.add_rtc?(hsrc, hdst, 3, @topology.topo)
+      # end
+      # if (@test_counter == 10)
+      #   hsrc = @topology.hosts[@test_mac_table[1]]
+      #   hdst = @topology.hosts[@test_mac_table[6]]
+      #   @rtcManager.add_rtc?(hsrc, hdst, 3, @topology.topo)
+      # end
       @test_counter += 1
     end
   end
