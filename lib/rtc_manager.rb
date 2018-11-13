@@ -24,6 +24,7 @@ class RTCManager
     while (initial_phase < period)
       if (routeSchedule(rtc, topo, initial_phase))
         puts @timeslot_table
+        test(@timeslot_table, topo)
         return true
       else
         initial_phase += 1
@@ -35,6 +36,47 @@ class RTCManager
     puts "####################"
     puts "####################"
     return false
+  end
+
+  def toposearch(src_dpid, dst_dpid, topo)
+    ##topoから接続先を検索##
+    for each in topo
+      if (each[:type] == "switch2switch")
+        if (each[:switch_a][:dpid] == src_dpid) && (each[:switch_b][:dpid] == dst_dpid)
+          return each[:switch_a][:port_no]
+        elsif (each[:switch_b][:dpid] == src_dpid) && (each[:switch_a][:dpid] == dst_dpid)
+          return each[:switch_b][:port_no]
+        end
+      end
+    end
+    ##topoから接続先を検索##
+  end
+
+  def test(timeslot_table, topo)
+    flowmod_list = []
+    # timeslot_table.each do |key, value|
+    for rtc in timeslot_table[0]
+      fm = Hash.new
+      fm.store(:dpid, rtc.src.dpid)
+      fm.store(:in_port, rtc.src.port_no)
+      fm.store(:out_port, toposearch(rtc.route[1][:src].to_i, rtc.route[1][:dst].to_i, topo))
+      flowmod_list.push(fm)
+      range = rtc.route.size
+      for i in Range.new(1, range - 3)
+        fm = Hash.new
+        fm.store(:dpid, rtc.route[i][:dst].to_i)
+        fm.store(:in_port, toposearch(rtc.route[i][:dst].to_i, rtc.route[i][:src].to_i, topo))
+        fm.store(:out_port, toposearch(rtc.route[i + 1][:src].to_i, rtc.route[i + 1][:dst].to_i, topo))
+        flowmod_list.push(fm)
+      end
+      fm = Hash.new
+      fm.store(:dpid, rtc.dst.dpid)
+      fm.store(:in_port, toposearch(rtc.route[range - 2][:dst].to_i, rtc.route[range - 2][:src].to_i, topo))
+      fm.store(:out_port, rtc.dst.port_no)
+      flowmod_list.push(fm)
+    end
+    puts flowmod_list
+    # end
   end
 
   private
