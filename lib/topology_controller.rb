@@ -68,6 +68,27 @@ class TopologyController < Trema::Controller
         hsrc = @topology.hosts[@test_mac_table[4]]
         hdst = @topology.hosts[@test_mac_table[5]]
         @rtcManager.add_rtc?(hsrc, hdst, 5, @topology.topo)
+        # puts "flow_mod"
+        # send_flow_mod_add(
+        #   1,
+        #   match: Match.new(in_port: 3),
+        #   actions: SendOutPort.new(2),
+        # )
+        # send_flow_mod_add(
+        #   4,
+        #   match: Match.new(in_port: 1),
+        #   actions: SendOutPort.new(3),
+        # )
+        # send_flow_mod_add(
+        #   6,
+        #   match: Match.new(in_port: 2),
+        #   actions: SendOutPort.new(4),
+        # )
+      end
+      if (@test_counter == 9)
+        hsrc = @topology.hosts[@test_mac_table[4]]
+        hdst = @topology.hosts[@test_mac_table[5]]
+        @rtcManager.add_rtc?(hsrc, hdst, 5, @topology.topo)
       end
       # if (@test_counter == 8)
       #   hsrc = @topology.hosts[@test_mac_table[1]]
