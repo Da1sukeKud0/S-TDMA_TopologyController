@@ -1,5 +1,7 @@
-require "~/trema/topology/lib/rtc"
-require "~/trema/topology/lib/dijkstra"
+require "rtc"
+require "dijkstra"
+require "network_scheduler"
+require "rational"
 ##
 ##　実時間通信要求に対し経路スケジューリングおよび時刻スケジューリングを行う
 ##
@@ -11,6 +13,7 @@ class RTCManager
     for i in Range.new(0, 9)
       @timeslot_table[i] = []
     end
+    @networkscheduler = NetworkScheduler.new
   end
 
   attr_reader :map
@@ -76,6 +79,7 @@ class RTCManager
       flowmod_list.push(fm)
     end
     puts flowmod_list
+    # @networkscheduler.make_flowmods(flowmod_list)
     # end
   end
 
