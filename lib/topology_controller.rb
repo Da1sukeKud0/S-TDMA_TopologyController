@@ -85,11 +85,11 @@ class TopologyController < Trema::Controller
         #   actions: SendOutPort.new(4),
         # )
       end
-      if (@test_counter == 9)
-        hsrc = @topology.hosts[@test_mac_table[4]]
-        hdst = @topology.hosts[@test_mac_table[5]]
-        @rtcManager.add_rtc?(hsrc, hdst, 5, @topology.topo)
-      end
+      # if (@test_counter == 9)
+      #   hsrc = @topology.hosts[@test_mac_table[4]]
+      #   hdst = @topology.hosts[@test_mac_table[5]]
+      #   @rtcManager.add_rtc?(hsrc, hdst, 5, @topology.topo)
+      # end
       # if (@test_counter == 8)
       #   hsrc = @topology.hosts[@test_mac_table[1]]
       #   hdst = @topology.hosts[@test_mac_table[6]]
