@@ -1,6 +1,6 @@
 require "link"
 require "json"
-require "~/trema/topology/lib/host"
+require "host"
 
 # Topology information containing the list of known switches, ports,
 # and links.
@@ -83,9 +83,9 @@ class TopologyManager
     ## @hostsへのHostの格納
     h = Host.new(host[0], host[1], host[2], host[3])
     @hosts[host[0]] = h ## key=mac_addressで格納
-    puts "h is #{h}"
+    puts "add host: #{h.mac_address}"
     ## @topoへの追加
-    add_switch2host_link h
+    add_switch2host_link(h)
     mac_address, _ip_address, dpid, port_no = *host
     maybe_send_handler :add_host, mac_address, Port.new(dpid, port_no), self
     topo2json
@@ -134,12 +134,14 @@ class TopologyManager
     for each in @topo
       ## switch_aおよびbとdpid,portの組み合わせが一致した場合に@topoからリンクを削除
       if (each[:switch_a][:dpid] == port.dpid) && (each[:switch_a][:port_no] == port.number)
-        @topo -= [each]
         ## s2hの場合は@hostsからホストを削除
-        @hosts.delete(each[:mac_address]) if each[:type] == "switch2host"
-        puts "delete_host"
+        if (each[:type] == "switch2host")
+          @hosts.delete(each[:host].mac_address)
+          puts "delete_host: #{each[:host].mac_address} from dpid: #{each[:switch_a][:dpid]}"
+        end
+        @topo -= [each]
         # topo2json
-      elsif (each[:switch_b][:dpid] == port.dpid) && (each[:switch_a][:port_no] == port.number)
+      elsif (each[:type] == "switch2switch") && (each[:switch_b][:dpid] == port.dpid) && (each[:switch_b][:port_no] == port.number)
         @topo -= [each]
         # topo2json
       end
