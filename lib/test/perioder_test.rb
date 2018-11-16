@@ -18,7 +18,6 @@ class Perioder
   end
 
   def del_period(period)
-    # @period_list.delete(period)
     for i in Range.new(0, @period_list.size - 1)
       if (@period_list[i] == period)
         @period_list.delete_at(i)
@@ -61,6 +60,12 @@ p.add_period(4)
 puts ""
 p.add_period(2)
 puts ""
+
 p.del_period(2)
 puts ""
 p.del_period(3)
+puts ""
+p.del_period(2)
+puts ""
+p.del_period(4)
+puts ""
