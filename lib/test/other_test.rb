@@ -71,7 +71,12 @@ def test5
   @period_list = []
 end
 
-list = Hash.new { |hash, key| hash[key] = [] }
-list[1].push("p1")
-@period_list = []
-@lcm = 0
+h = { "def" => 2, "ghi" => 1, "abc" => 3 }
+p h.sort.to_h
+p "h is #{h}"
+p h.sort.reverse.to_h
+p "h is #{h}"
+p h.sort_by{ | k, v | v }.to_h
+p "h is #{h}"
+p h.sort{ | a, b | b[1] <=> a[1] }.to_h
+p "h is #{h}"
