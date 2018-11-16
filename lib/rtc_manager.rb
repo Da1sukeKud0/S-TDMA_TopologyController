@@ -9,10 +9,12 @@ require "rational"
 class RTCManager
   def initialize
     @hst_table = Hash.new ## ホストの識別名(h1,h2,,,hn)とmac_addressの対応
-    @timeslot_table = Hash.new ##timeslot_id: [rtc,rtc,,,]
-    for i in Range.new(0, 9)
-      @timeslot_table[i] = []
-    end
+    # @timeslot_table = Hash.new ##timeslot_id: [rtc,rtc,,,]
+    # for i in Range.new(0, 9)
+    #   @timeslot_table[i] = []
+    # end
+    @timeslot_table = Hash.new { |hash, key| hash[key] = [] }
+    @period_list = []
     @networkscheduler = NetworkScheduler.new
   end
 
@@ -24,12 +26,13 @@ class RTCManager
   def add_rtc?(src, dst, period, topo)
     rtc = RTC.new(src, dst, period)
     initial_phase = 0 ##初期位相0に設定
+    ## 0~periodの間でスケジューリング可能な初期位相を探す
     while (initial_phase < period)
-      if (routeSchedule(rtc, topo, initial_phase))
+      if (routeSchedule(rtc, topo, initial_phase)) ##スケジューリング可
         puts @timeslot_table
-        test(@timeslot_table, topo)
+        # test(@timeslot_table, topo)
         return true
-      else
+      else ##スケジューリング不可
         initial_phase += 1
       end
     end
@@ -41,20 +44,8 @@ class RTCManager
     return false
   end
 
-  def toposearch(src_dpid, dst_dpid, topo)
-    ##topoから接続先を検索##
-    for each in topo
-      if (each[:type] == "switch2switch")
-        if (each[:switch_a][:dpid] == src_dpid) && (each[:switch_b][:dpid] == dst_dpid)
-          return each[:switch_a][:port_no]
-        elsif (each[:switch_b][:dpid] == src_dpid) && (each[:switch_a][:dpid] == dst_dpid)
-          return each[:switch_b][:port_no]
-        end
-      end
-    end
-    ##topoから接続先を検索##
-  end
-
+  ##　得られたtimeslot_tableを
+  ## flowModに必要なdpid, in_port(match), out_port(action)の情報に変換する関数
   def test(timeslot_table, topo)
     flowmod_list = []
     # timeslot_table.each do |key, value|
@@ -85,6 +76,7 @@ class RTCManager
 
   private
 
+  ## add_rtc
   ## 既存の実時間通信との非重複経路を探索
   ## 存在する場合はrtcにroute, initial_phaseを追加しtrue
   ## 存在しない場合は初期位相を変化させ再帰呼出し
@@ -94,20 +86,38 @@ class RTCManager
       map = setGraph(topo)
       route = map.shortest_path(@hst_table.key(rtc.src), @hst_table.key(rtc.dst))
       if (route) ##経路が存在する場合は使用するスロットにrtcを格納
-        # rtc_tmp = RTC.new(rtc.src, rtc.dst, rtc.period)
-        # rtc_tmp.setSchedule(initial_phase, val)
         rtc.setSchedule(initial_phase, route)
-        for i in Range.new(initial_phase, 9)
+        # for i in Range.new(initial_phase, @timeslot_table.size - 1)
+        #   if ((i + initial_phase) % rtc.period == 0)
+        #     @timeslot_table[i].push(rtc)
+        #   end
+        # end
+        for i in Range.new(0, rtc.period - 1)
           if ((i + initial_phase) % rtc.period == 0)
             @timeslot_table[i].push(rtc)
+          else
+            @timeslot_table[i] = []
           end
         end
+        add_period(rtc.period)
       else ##ルートなし
         return false
       end
     else ## 既存のrtcがある場合
-      route_list = Hash.new()
+      puts "old_lcm is #{@lcm}"
+      ## 計算用のtmp_timeslot_tableに@timeslot_tableを複製(倍率はadd_period?に従う)
+      tmp_timeslot_table = Hash.new { |hash, key| hash[key] = [] }
       @timeslot_table.each do |timeslot, exist_rtcs|
+        for i in Range.new(0, add_period?(rtc.period) - 1)
+          tmp_timeslot_table[timeslot + @lcm * i] = @timeslot_table[timeslot].clone
+        end
+      end
+      puts "@timeslot_table"
+      puts @timeslot_table
+      puts "tmp_timeslot_table"
+      puts tmp_timeslot_table
+      route_list = Hash.new() ## 一時的な経路情報格納 {timeslot=>route,,,}
+      tmp_timeslot_table.each do |timeslot, exist_rtcs|
         ## initial_phase==0として、timeslotが被るrtcがあれば抽出し使用ルートを削除してから探索
         puts "tsl=#{timeslot}"
         if ((timeslot - initial_phase) % rtc.period == 0)
@@ -125,31 +135,30 @@ class RTCManager
           route = map_tmp.shortest_path(@hst_table.key(rtc.src), @hst_table.key(rtc.dst))
           if (route) ## ルーティング可能なら一時変数に格納
             route_list[timeslot] = route
-          else ## ルーティング不可なら初期位相を変化させ再探索
-            # if (initial_phase == 0)
-            #   while (initial_phase < rtc.period)
-            #     initial_phase += 1
-            #     puts "再探索 初期位相は#{initial_phase}"
-            #     if (routeSchedule(rtc, topo, initial_phase))
-            #       return true
-            #     end
-            #     break if ((initial_phase - 1)==rtc.period)
-            #   end
-            # end
+          else ## 最終的に無理
             return false
           end
         end
       end
       ## ここでfalseでない時点で0~9のうち使用する全てのタイムスロットでルーティングが可能
+      ## まずtmp_timeslot_tableを複製
+      @timeslot_table = tmp_timeslot_table.clone
+      ## period_listの更新
+      add_period(rtc.period)
+      ## @timeslot_tableに対しroute_listに従ってrtcを追加
       route_list.each do |key, val|
-        rtc_tmp = RTC.new(rtc.src, rtc.dst, rtc.period)
-        rtc_tmp.setSchedule(initial_phase, val)
-        @timeslot_table[key].push(rtc_tmp)
+        # rtc_tmp = RTC.new(rtc.src, rtc.dst, rtc.period)
+        # rtc_tmp.setSchedule(initial_phase, val)
+        rtc.setSchedule(initial_phase, val)
+        @timeslot_table[key].push(rtc.clone)
       end
+      @timeslot_table = @timeslot_table.sort.to_h
     end
     return true
   end
 
+  ## routeSchedule
+  ## @topoの形式を変換しDijkstraクラスのインスタンスを返す関数
   def setGraph(topo)
     map = Dijkstra.new ## 経路計算アルゴリズム用に変換されたトポロジ情報
     for each in topo
@@ -171,7 +180,91 @@ class RTCManager
     end
     return map
   end
-end
 
-## memo
-## とりあえずsend_packetsで特定のホストへの接続要求を行う
+  ## routeSchedule
+  ## @period_listに新規periodを追加する関数
+  def add_period(period)
+    @period_list.push(period)
+    puts "plist is #{@period_list}"
+    if (@period_list.size == 1)
+      @lcm = period
+      # puts "lcm is #{@lcm}"
+      return 1
+    else
+      old_lcm = @lcm
+      res = calc_lcm / old_lcm
+      # puts "#{res} bai !"
+      return res
+    end
+  end
+
+  ## routeSchedule
+  ## @period_listに新規periodを追加した場合の
+  ## @timeslot_tableの倍率を返す関数
+  def add_period?(period)
+    puts "plist is #{@period_list}"
+    if (@period_list.size == 0)
+      @lcm = period
+      puts "lcm is #{@lcm}"
+      return 1
+    else
+      old_lcm = @lcm
+      res = (@lcm.lcm(period)) / old_lcm
+      puts "#{res} bai !"
+    end
+    return res
+  end
+
+  ## routeSchedule
+  ## @period_listから指定したperiodを1つだけ削除する関数
+  def del_period(period)
+    for i in Range.new(0, @period_list.size - 1)
+      if (@period_list[i] == period)
+        @period_list.delete_at(i)
+        break
+      end
+    end
+    puts "plist is #{@period_list}"
+    if (@period_list.size == 0)
+      @lcm = 0
+      puts "timeslot all delete"
+    else
+      old_lcm = @lcm
+      puts "minus #{old_lcm / calc_lcm} bai !"
+    end
+  end
+
+  ## add_period, del_period
+  ## @period_listの要素全ての最小公倍数を返す関数
+  def calc_lcm
+    if @period_list.size == 0
+      puts "0"
+      return 0
+    elsif (@period_list.size == 1)
+      puts @period_list[0]
+      return @period_list[0]
+    else
+      @lcm = 1
+      for i in Range.new(0, @period_list.size - 1)
+        @lcm = @lcm.lcm(@period_list[i])
+      end
+      puts "lcm is #{@lcm}"
+      return @lcm
+    end
+  end
+
+  ## test
+  ## src_dpidとdst_dpid間のリンクを検索し
+  ## src_dpid側のポート番号を返す関数
+  def toposearch(src_dpid, dst_dpid, topo)
+    for each in topo
+      if (each[:type] == "switch2switch")
+        if (each[:switch_a][:dpid] == src_dpid) && (each[:switch_b][:dpid] == dst_dpid)
+          return each[:switch_a][:port_no]
+        elsif (each[:switch_b][:dpid] == src_dpid) && (each[:switch_a][:dpid] == dst_dpid)
+          return each[:switch_b][:port_no]
+        end
+      end
+    end
+  end
+end
