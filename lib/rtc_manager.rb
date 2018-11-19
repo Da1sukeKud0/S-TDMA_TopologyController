@@ -9,10 +9,6 @@ require "rational"
 class RTCManager
   def initialize
     @hst_table = Hash.new ## ホストの識別名(h1,h2,,,hn)とmac_addressの対応
-    # @timeslot_table = Hash.new ##timeslot_id: [rtc,rtc,,,]
-    # for i in Range.new(0, 9)
-    #   @timeslot_table[i] = []
-    # end
     @timeslot_table = Hash.new { |hash, key| hash[key] = [] }
     @period_list = []
     @networkscheduler = NetworkScheduler.new
@@ -118,7 +114,7 @@ class RTCManager
       puts tmp_timeslot_table
       route_list = Hash.new() ## 一時的な経路情報格納 {timeslot=>route,,,}
       tmp_timeslot_table.each do |timeslot, exist_rtcs|
-        ## initial_phase==0として、timeslotが被るrtcがあれば抽出し使用ルートを削除してから探索
+        ## initial_phase = 0として、timeslotが被るrtcがあれば抽出し使用ルートを削除してから探索
         puts "tsl=#{timeslot}"
         if ((timeslot - initial_phase) % rtc.period == 0)
           map_tmp = setGraph(topo)
@@ -147,8 +143,6 @@ class RTCManager
       add_period(rtc.period)
       ## @timeslot_tableに対しroute_listに従ってrtcを追加
       route_list.each do |key, val|
-        # rtc_tmp = RTC.new(rtc.src, rtc.dst, rtc.period)
-        # rtc_tmp.setSchedule(initial_phase, val)
         rtc.setSchedule(initial_phase, val)
         @timeslot_table[key].push(rtc.clone)
       end
@@ -188,12 +182,10 @@ class RTCManager
     puts "plist is #{@period_list}"
     if (@period_list.size == 1)
       @lcm = period
-      # puts "lcm is #{@lcm}"
       return 1
     else
       old_lcm = @lcm
       res = calc_lcm / old_lcm
-      # puts "#{res} bai !"
       return res
     end
   end
