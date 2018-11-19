@@ -22,6 +22,8 @@ topologyManager
 
 インストール
 -------
+実行環境としてrvmによりRuby2.3.7をインストールすることを推奨します。
+またopenvswitchはnative sourceよりインストールすることを推奨します。
 ```
 $ git clone https://github.com/Da1sukeKud0/topology.git
 $ cd topology
