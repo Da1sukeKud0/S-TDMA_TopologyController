@@ -8,10 +8,10 @@ require "rational"
 
 class RTCManager
   def initialize
-    @hst_table = Hash.new ## ホストの識別名(h1,h2,,,hn)とmac_addressの対応
-    @timeslot_table = Hash.new { |hash, key| hash[key] = [] }
-    @period_list = []
-    @networkscheduler = NetworkScheduler.new
+    @hst_table = Hash.new ## {h1(ホスト識別名)=>mac_address, ,,}
+    @timeslot_table = Hash.new { |hash, key| hash[key] = [] } ## {timeslot=>[rtc,rtc,,,], ,,}
+    @period_list = [] ## 周期の種類を格納(同じ数値の周期も重複して格納)
+    @networkscheduler = NetworkScheduler.new ## beta
   end
 
   attr_reader :map
@@ -165,13 +165,14 @@ class RTCManager
           @hst_table[hst_id] = each[:host]
         end
         map.add_edge(each[:switch_a][:dpid], hst_id, 0) ## cost 0
-        puts "#{each[:switch_a][:dpid]} to #{hst_id} link add"
+        # puts "#{each[:switch_a][:dpid]} to #{hst_id} link add"
       else
         ## s2sリンクの場合
         map.add_edge(each[:switch_a][:dpid], each[:switch_b][:dpid]) ## cost 1
-        puts "#{each[:switch_a][:dpid]} to #{each[:switch_b][:dpid]} link add"
+        # puts "#{each[:switch_a][:dpid]} to #{each[:switch_b][:dpid]} link add"
       end
     end
+    puts "nodes = #{map.nodes}"
     return map
   end
 

@@ -96,7 +96,6 @@ class TopologyManager
   ## @topoをJSON形式で出力する
   ##
   def topo2json
-    puts @topo
     File.open("/tmp/topology.json", "w") do |file|
       JSON.dump(@topo, file)
     end
@@ -125,7 +124,6 @@ class TopologyManager
     l.store(:host, hostStats)
     @topo.push(l)
     # topo2json
-    puts "topo is #{@topo}"
   end
 
   ## @topoからs2s,s2hのリンクを削除する関数

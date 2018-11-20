@@ -99,7 +99,7 @@ class Dijkstra
       return false
     end
     # end
-    puts @solved_path
+    puts "solved path is #{@solved_path}"
     return @solved_path
   end
 
@@ -114,7 +114,6 @@ class Dijkstra
     # nodes.push(src) unless nodes.include?(src)
     # puts "node #{src} is added" unless nodes.include?(src)
     if !nodes.include?(src)
-      puts "node #{src} is added"
       nodes.push(src)
     end
   end
