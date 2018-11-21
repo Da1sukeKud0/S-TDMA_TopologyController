@@ -23,3 +23,4 @@ doc/
 .rufo
 .tags
 lib/test/mini_Test.rb
+test/test.json
