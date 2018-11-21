@@ -67,6 +67,13 @@ class TopologyController < Trema::Controller
         stopwatch("スケジューリング可")
       end
       if (@test_counter == 8)
+        hsrc = @topology.hosts[@test_mac_table[1]]
+        hdst = @topology.hosts[@test_mac_table[6]]
+        stopwatch("add_rtc?呼び出し")
+        @rtcManager.add_rtc?(hsrc, hdst, 2, @topology.topo)
+        stopwatch("スケジューリング可")
+      end
+      if (@test_counter == 9)
         hsrc = @topology.hosts[@test_mac_table[4]]
         hdst = @topology.hosts[@test_mac_table[5]]
         stopwatch("add_rtc?呼び出し")
