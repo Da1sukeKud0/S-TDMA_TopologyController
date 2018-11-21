@@ -21,7 +21,7 @@ def main():
     makeLink(switchNum)
 
     # set output file and write
-    path = "test/core_" + str(switchNum) + ".conf"
+    path = "../test/core_" + str(switchNum) + ".conf"
     if os.path.exists(path):
         os.remove(path)
     with open(path, mode='w') as file:
