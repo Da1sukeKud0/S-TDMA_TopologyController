@@ -13,7 +13,7 @@ from matplotlib import pyplot
 conf = []
 
 
-def main(): # ランダムなトポロジを生成(Barabási-Albertモデルに従う)
+def main():  # ランダムなトポロジを生成(Barabási-Albertモデルに従う)
     print("Requirement: 1 <= complexity < switchNum")
     switchNum = input("スイッチ数(switchNum): ")
     complexity = input("新しいノードから既存のノードに接続するエッジの数(complexity): ")
@@ -35,12 +35,12 @@ def main(): # ランダムなトポロジを生成(Barabási-Albertモデルに�
 
     # グラフをpngで出力
     networkx.draw(G)
-    pngpath = "../test/ba_random_" + str(switchNum) + "_" + str(complexity) + ".png"
+    pngpath = "test/ba_random_" + str(switchNum) + "_" + str(complexity) + ".png"
     pyplot.savefig(pngpath)
     # pyplot.show()
 
     # ファイルに出力
-    path = "../test/ba_random_" + str(switchNum) +  "_" + str(complexity) + ".conf"
+    path = "test/ba_random_" + str(switchNum) + "_" + str(complexity) + ".conf"
     if os.path.exists(path):
         os.remove(path)
     with open(path, mode='w') as file:
