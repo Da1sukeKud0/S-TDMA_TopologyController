@@ -35,7 +35,8 @@ def main():  # ランダムなトポロジを生成(Barabási-Albertモデルに
 
     # グラフをpngで出力
     networkx.draw(G)
-    pngpath = "test/topo_image/ba_random_" + str(switchNum) + "_" + str(complexity) + ".png"
+    pngpath = "test/topo_image/ba_random_" + \
+        str(switchNum) + "_" + str(complexity) + ".png"
     pyplot.savefig(pngpath)
     # pyplot.show()
 
@@ -50,8 +51,9 @@ def main():  # ランダムなトポロジを生成(Barabási-Albertモデルに
 
 def makeSwitch(num):
     for n in range(1, num+1):
-        name = "0x" + str(n)
-        cmd = "vswitch('" + name + "') { dpid '" + name + "' }"
+        name = "s" + str(n)
+        dpid = "0x" + str(n)
+        cmd = "vswitch('" + name + "') { dpid '" + dpid + "' }"
         conf.append(cmd)
     conf.append("")
 
@@ -74,8 +76,8 @@ def makeLinks(edgeList):
 
 
 def makeLink(src, dst):
-    src = "0x" + str(src)
-    dst = "0x" + str(dst)
+    src = "s" + str(src)
+    dst = "s" + str(dst)
     cmd_s2s = "link '" + src + "', '" + dst + "'"
     conf.append(cmd_s2s)
 
