@@ -24,6 +24,7 @@ def main():
     for cmd in cmdList:
         subprocess.call(cmd)
 
+
 def addHostLink(num):
     for n in range(1, num+1):
         name = "h" + str(n)
@@ -32,14 +33,14 @@ def addHostLink(num):
         cmd.append(name)
         cmd.extend(cmd02)
         cmdList.append(cmd)
-        #subprocess.call(cmd)
+        # subprocess.call(cmd)
 
 
 def additional_packet_in(num):
     cmd = "rvmsudo ./bin/trema send_packets -n 1 -s h1 -d h2".split(" ")
     for n in range(1, num+1):
         cmdList.append(cmd)
-        #subprocess.call(cmd)
+        # subprocess.call(cmd)
 
 
 if __name__ == '__main__':
