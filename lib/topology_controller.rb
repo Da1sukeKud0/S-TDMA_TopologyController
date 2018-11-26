@@ -62,21 +62,21 @@ class TopologyController < Trema::Controller
       if (@test_counter == 7)
         hsrc = @topology.hosts[@test_mac_table[1]]
         hdst = @topology.hosts[@test_mac_table[6]]
-        stopwatch("add_rtc?呼び出し")
+        startwatch("add_rtc?呼び出し")
         @rtcManager.add_rtc?(hsrc, hdst, 2, @topology.topo)
         stopwatch("スケジューリング可")
       end
       if (@test_counter == 8)
         hsrc = @topology.hosts[@test_mac_table[1]]
         hdst = @topology.hosts[@test_mac_table[6]]
-        stopwatch("add_rtc?呼び出し")
+        startwatch("add_rtc?呼び出し")
         @rtcManager.add_rtc?(hsrc, hdst, 2, @topology.topo)
         stopwatch("スケジューリング可")
       end
       if (@test_counter == 9)
         hsrc = @topology.hosts[@test_mac_table[4]]
         hdst = @topology.hosts[@test_mac_table[5]]
-        stopwatch("add_rtc?呼び出し")
+        startwatch("add_rtc?呼び出し")
         @rtcManager.add_rtc?(hsrc, hdst, 5, @topology.topo)
         stopwatch("スケジューリング可")
         # puts "flow_mod"
@@ -151,6 +151,13 @@ class TopologyController < Trema::Controller
   end
 
   ##
+  ## タイマー
+  def startwatch(tag)
+    @timer = Time.now
+    @old_tag = tag
+  end
+
+  ##
   ## 前回の呼び出しからの経過時間を測定
   def stopwatch(tag)
     if @timer
@@ -158,7 +165,5 @@ class TopologyController < Trema::Controller
       puts "during time of #{@old_tag} to #{tag}: #{Time.now - @timer}"
       puts ""
     end
-    @old_tag = tag
-    @timer = Time.now
   end
 end
