@@ -24,3 +24,4 @@ doc/
 .tags
 lib/test/mini_Test.rb
 test/test.json
+bin/bundle
