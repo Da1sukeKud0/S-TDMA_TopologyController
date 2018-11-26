@@ -30,10 +30,28 @@ $ cd topology
 $ bundle install --binstubs
 ```
 
-
-使用方法
+トポロジ生成スクリプトの使用方法
 ----
+BAモデルに基づくランダムトポロジの生成(標準入力よりスイッチ数と複雑さを指定)
+```
+$ util/createRandomTopology.py
+```
+testディレクトリに.conf、test/topo_image/にトポロジのグラフ画像が生成される。
 
+コアトポロジ、リニアトポロジの生成(引数にスイッチ数を指定)
+```
+$ util/createLinearTopology.py 10
+$ util/createCoreTopology.py 10
+```
+testディレクトリに.confが生成される。
+
+Tremaのsend_packetsコマンドを一括実行するスクリプト(引数にホスト数と追加実行したいpacket_Inの数を指定)
+```
+$ util/send_packets.py 6 3
+```
+
+OpenFlowコントローラの使用方法
+----
 コントローラの起動（`-c`オプションにより任意の初期トポロジを設定）
 ```
 $ ./bin/trema run ./lib/topology_controller.rb -c test/linear.conf
