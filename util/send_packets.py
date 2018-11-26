@@ -20,7 +20,7 @@ def main():
 
     # let's packet_In !!!
     addHostLink(hostNum)
-    packet_in(packetInNum)
+    additional_packet_in(packetInNum)
     for cmd in cmdList:
         subprocess.call(cmd)
 
@@ -35,7 +35,7 @@ def addHostLink(num):
         #subprocess.call(cmd)
 
 
-def packet_in(num):
+def additional_packet_in(num):
     cmd = "rvmsudo ./bin/trema send_packets -n 1 -s h1 -d h2".split(" ")
     for n in range(1, num+1):
         cmdList.append(cmd)
