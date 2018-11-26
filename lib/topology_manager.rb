@@ -88,7 +88,7 @@ class TopologyManager
     add_switch2host_link(h)
     mac_address, _ip_address, dpid, port_no = *host
     maybe_send_handler :add_host, mac_address, Port.new(dpid, port_no), self
-    topo2json
+    # topo2json
   end
 
   private
