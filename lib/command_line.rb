@@ -1,8 +1,8 @@
 require "gli"
 require "pio"
 # require 'view/text'
-# require 'view/text_sl'
-require "view/text_nooutput"
+require 'view/text_sl'
+# require "view/text_nooutput"
 
 # command-line options passed to topology-controller.rb
 class CommandLine
