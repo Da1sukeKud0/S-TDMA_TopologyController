@@ -1,7 +1,8 @@
-require 'gli'
-require 'pio'
+require "gli"
+require "pio"
 # require 'view/text'
-require 'view/text_sl'
+# require 'view/text_sl'
+require "view/text_nooutput"
 
 # command-line options passed to topology-controller.rb
 class CommandLine
@@ -15,7 +16,7 @@ class CommandLine
   end
 
   def parse(args)
-    program_desc 'Topology discovery controller'
+    program_desc "Topology discovery controller"
     set_destination_mac_flag
     define_text_command
     define_graphviz_command
@@ -35,15 +36,15 @@ class CommandLine
 
   def define_text_command
     default_command :text
-    desc 'Displays topology information (text mode)'
+    desc "Displays topology information (text mode)"
     command :text do |cmd|
       cmd.action(&method(:create_text_view))
     end
   end
 
   def define_graphviz_command
-    desc 'Displays topology information (Graphviz mode)'
-    arg_name 'output_file'
+    desc "Displays topology information (Graphviz mode)"
+    arg_name "output_file"
     command :graphviz do |cmd|
       cmd.action(&method(:create_graphviz_view))
     end
@@ -56,7 +57,7 @@ class CommandLine
   end
 
   def create_graphviz_view(_global_options, _options, args)
-    require 'view/graphviz'
+    require "view/graphviz"
     if args.empty?
       @view = View::Graphviz.new
     else
