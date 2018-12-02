@@ -19,7 +19,6 @@ class RTCManager
   ## 実時間通信要求に対しスケジューリング可否を判定
   ## 可能ならrtcListを更新しtrue 不可ならfalse
   def add_rtc?(src, dst, period, topo)
-    puts topo
     rtc = RTC.new(src, dst, period)
     initial_phase = 0 ##初期位相0に設定
     ## 0~periodの間でスケジューリング可能な初期位相を探す
