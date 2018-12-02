@@ -32,15 +32,7 @@ def main():
         #     if (counter == 25):
         #         time.sleep(3)
         #     time.sleep(2.5)
-        if (counter == 5):
-            time.sleep(5)
-        if (counter == 10):
-            time.sleep(5)
-        if (counter == 15):
-            time.sleep(10)
-        if (counter == 20):
-            time.sleep(10)
-        if (counter == 25):
+        if (counter % 5 == 0):
             time.sleep(10)
         time.sleep(1)
         counter += 1
