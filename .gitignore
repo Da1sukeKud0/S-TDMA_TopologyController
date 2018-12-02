@@ -25,3 +25,4 @@ doc/
 lib/test/mini_Test.rb
 test/test.json
 bin/bundle
+lib/test/.edges
