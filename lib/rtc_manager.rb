@@ -1,6 +1,5 @@
-require "rtc"
-require "dijkstra"
-require "network_scheduler"
+require_relative "rtc"
+require_relative "dijkstra"
 require "rational"
 ##
 ##　実時間通信要求に対し経路スケジューリングおよび時刻スケジューリングを行う
@@ -11,7 +10,7 @@ class RTCManager
     @hst_table = Hash.new ## {h1(ホスト識別名)=>mac_address, ,,}
     @timeslot_table = Hash.new { |hash, key| hash[key] = [] } ## {timeslot=>[rtc,rtc,,,], ,,}
     @period_list = [] ## 周期の種類を格納(同じ数値の周期も重複して格納)
-    @networkscheduler = NetworkScheduler.new ## beta
+    # @networkscheduler = NetworkScheduler.new ## beta
   end
 
   attr_reader :map
@@ -20,6 +19,7 @@ class RTCManager
   ## 実時間通信要求に対しスケジューリング可否を判定
   ## 可能ならrtcListを更新しtrue 不可ならfalse
   def add_rtc?(src, dst, period, topo)
+    puts topo
     rtc = RTC.new(src, dst, period)
     initial_phase = 0 ##初期位相0に設定
     ## 0~periodの間でスケジューリング可能な初期位相を探す
