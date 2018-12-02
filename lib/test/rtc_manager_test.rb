@@ -30,7 +30,9 @@ class RTCManagerTest
       mac_address = "mac" + i.to_s
       maybe_add_host(mac_address, i)
     end
+    startwatch("add_rtc?呼び出し")
     @rtcManager.add_rtc?(@hosts["mac1"], @hosts["mac6"], 5, @topo)
+    stopwatch("スケジューリング可")
     # @rtcManager.add_rtc?(2, 13, 2, @topo)
     # @rtcManager.add_rtc?(16, 8, 2, @topo)
   end
@@ -68,6 +70,23 @@ class RTCManagerTest
     ## Host
     l.store(:host, hostStats)
     @topo.push(l)
+  end
+
+  ##
+  ## タイマー
+  def startwatch(tag)
+    @timer = Time.now
+    @old_tag = tag
+  end
+
+  ##
+  ## 前回の呼び出しからの経過時間を測定
+  def stopwatch(tag)
+    if @timer
+      puts ""
+      puts "during time of #{@old_tag} to #{tag}: #{Time.now - @timer}"
+      puts ""
+    end
   end
 end
 
