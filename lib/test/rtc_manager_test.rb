@@ -8,6 +8,8 @@ class RTCManagerTest
   def initialize
     @rtcManager = RTCManager.new
     @topo = []
+    @hosts = Hash.new { [].freeze } ## hosts{}: keyはホストのmac_address
+
     edges = []
     switchNum = ARGV[0].to_i
     sh ("python ~/trema/topology/lib/test/barabasi_albert_graph.py #{switchNum} #{ARGV[1]}")
@@ -25,9 +27,10 @@ class RTCManagerTest
     end
     for i in Range.new(1, switchNum)
       # mac_address = [0x52, 0x42, 0x00, Random.rand(0x7f), Random.rand(0xff), Random.rand(0xff)]
-      maybe_add_host("mac" + i.to_s, i)
+      mac_address = "mac" + i.to_s
+      maybe_add_host(mac_address, i)
     end
-    @rtcManager.add_rtc?(1, 6, 5, @topo)
+    @rtcManager.add_rtc?(@hosts["mac1"], @hosts["mac6"], 5, @topo)
     # @rtcManager.add_rtc?(2, 13, 2, @topo)
     # @rtcManager.add_rtc?(16, 8, 2, @topo)
   end
@@ -38,6 +41,7 @@ class RTCManagerTest
   def maybe_add_host(mac_address, dpid)
     ## @hostsへのHostの格納
     h = Host.new(mac_address, "ip_address", dpid, "s" + dpid.to_s + "ph")
+    @hosts[mac_address] = h ## key=mac_addressで格納
     # puts "add host: #{h.mac_address}"
     ## @topoへの追加
     add_switch2host_link(h)
