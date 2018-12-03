@@ -22,6 +22,8 @@ def main():
             f.write(str(l) + "\n")
     networkx.draw(G, with_labels=True)
     pngpath = ".topo_ba.png"
+    networkx.nx_agraph.view_pygraphviz(G, prog='fdp')
+    pyplot.tight_layout
     pyplot.savefig(pngpath)
     return G.edges()
 
