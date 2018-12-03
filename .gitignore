@@ -27,3 +27,4 @@ test/test.json
 bin/bundle
 lib/test/.edges
 .edges
+.topo_ba*
