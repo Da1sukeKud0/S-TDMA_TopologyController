@@ -25,7 +25,6 @@ def main():
     networkx.nx_agraph.view_pygraphviz(G, prog='fdp')
     pyplot.tight_layout
     pyplot.savefig(pngpath)
-    return G.edges()
 
 
 if __name__ == '__main__':
