@@ -24,7 +24,15 @@ class RTCManager
     ## 0~periodの間でスケジューリング可能な初期位相を探す
     while (initial_phase < period)
       if (routeSchedule(rtc, topo, initial_phase)) ##スケジューリング可
-        puts @timeslot_table
+        puts "スケジューリング可能です"
+        puts ""
+        # puts @timeslot_table
+        @timeslot_table.each do |timeslot, exist_rtcs|
+          puts "timeslot: #{timeslot}"
+          exist_rtcs.each do |i|
+            puts i.route
+          end
+        end
         # test(@timeslot_table, topo)
         return true
       else ##スケジューリング不可
@@ -39,7 +47,7 @@ class RTCManager
     return false
   end
 
-  ##　得られたtimeslot_tableを
+  ## 得られたtimeslot_tableを
   ## flowModに必要なdpid, in_port(match), out_port(action)の情報に変換する関数
   def test(timeslot_table, topo)
     flowmod_list = []
@@ -82,11 +90,6 @@ class RTCManager
       route = map.shortest_path(@hst_table.key(rtc.src), @hst_table.key(rtc.dst))
       if (route) ##経路が存在する場合は使用するスロットにrtcを格納
         rtc.setSchedule(initial_phase, route)
-        # for i in Range.new(initial_phase, @timeslot_table.size - 1)
-        #   if ((i + initial_phase) % rtc.period == 0)
-        #     @timeslot_table[i].push(rtc)
-        #   end
-        # end
         for i in Range.new(0, rtc.period - 1)
           if ((i + initial_phase) % rtc.period == 0)
             @timeslot_table[i].push(rtc)
@@ -107,10 +110,10 @@ class RTCManager
           tmp_timeslot_table[timeslot + @lcm * i] = @timeslot_table[timeslot].clone
         end
       end
-      puts "@timeslot_table"
-      puts @timeslot_table
-      puts "tmp_timeslot_table"
-      puts tmp_timeslot_table
+      # puts "@timeslot_table"
+      # puts @timeslot_table
+      # puts "tmp_timeslot_table"
+      # puts tmp_timeslot_table
       route_list = Hash.new() ## 一時的な経路情報格納 {timeslot=>route,,,}
       tmp_timeslot_table.each do |timeslot, exist_rtcs|
         ## initial_phase = 0として、timeslotが被るrtcがあれば抽出し使用ルートを削除してから探索
@@ -135,7 +138,7 @@ class RTCManager
           end
         end
       end
-      ## ここでfalseでない時点で0~9のうち使用する全てのタイムスロットでルーティングが可能
+      ## ここでfalseでない時点で使用する全てのタイムスロットでルーティングが可能
       ## まずtmp_timeslot_tableを複製
       @timeslot_table = tmp_timeslot_table.clone
       ## period_listの更新
