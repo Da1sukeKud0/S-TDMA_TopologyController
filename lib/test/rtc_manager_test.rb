@@ -28,7 +28,7 @@ class RTCManagerTest
     end
     ## @edgesからs2sリンクを生成
     @edges.each do |src, dst|
-      # puts "src: #{src}, dst: #{dst}"
+      puts "src: #{src}, dst: #{dst}"
       add_switch2switch_link(src, dst)
     end
     ## switchNum個のホストを同番のスイッチに接続
