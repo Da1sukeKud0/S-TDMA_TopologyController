@@ -12,11 +12,11 @@ class RTCManagerTest
     @edges = []
   end
 
+  ## BAモデルに基づいたトポロジの生成
   def make_ba_topology(switchNum, complexity)
-    switchNum = switchNum.to_i
-    complexity = complexity.to_i
+    @switchNum = switchNum.to_i
     ## barabasi_albert_graph.pyを外部実行
-    sh ("python ~/trema/topology/lib/test/barabasi_albert_graph.py #{switchNum} #{complexity}")
+    sh ("python ~/trema/topology/lib/test/barabasi_albert_graph.py #{@switchNum} #{complexity}")
     ## @edgesに生成されたリンクを格納
     File.open(".edges") do |file|
       file.each_line do |l|
@@ -32,14 +32,23 @@ class RTCManagerTest
       add_switch2switch_link(src, dst)
     end
     ## switchNum個のホストを同番のスイッチに接続
-    make_host(switchNum)
+    make_host(@switchNum)
+  end
 
-    ## スケジューリング探索の実行
-    startwatch("add_rtc?呼び出し")
-    @rtcManager.add_rtc?(@hosts["mac1"], @hosts["mac6"], 5, @topo)
-    stopwatch("スケジューリング可")
-    # @rtcManager.add_rtc?(2, 13, 2, @topo)
-    # @rtcManager.add_rtc?(16, 8, 2, @topo)
+  ## 指定回数のスケジューリング探索の実行
+  def add_rtcs(num)
+    num.times do
+      src = rand(@switchNum) + 1
+      dst = rand(@switchNum) + 1
+      while (src == dst)
+        dst = rand(@switchNum) + 1
+      end
+      period = rand(4) + 2
+      puts "add_rtc?(src: h#{src}, dst: h#{dst}, period: #{period})"
+      startwatch("add_rtc?呼び出し")
+      @rtcManager.add_rtc?(@hosts["mac" + src.to_s], @hosts["mac" + dst.to_s], period, @topo)
+      stopwatch("スケジューリング終了")
+    end
   end
 
   private
@@ -115,4 +124,5 @@ if __FILE__ == $0
   end
   rmt = RTCManagerTest.new
   rmt.make_ba_topology(ARGV[0], ARGV[1])
+  rmt.add_rtcs(3)
 end
