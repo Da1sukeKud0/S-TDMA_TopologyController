@@ -34,7 +34,7 @@ def main():  # ランダムなトポロジを生成(Barabási-Albertモデルに
     makeLinks(G.edges())
 
     # グラフをpngで出力
-    networkx.draw(G)
+    networkx.draw(G, with_labels=True)
     pngpath = "test/topo_image/ba_random_" + \
         str(switchNum) + "_" + str(complexity) + ".png"
     pyplot.savefig(pngpath)

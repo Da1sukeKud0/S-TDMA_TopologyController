@@ -13,13 +13,17 @@ def main():
     # Barabási-Albertモデルのグラフを生成
     args = sys.argv
     G = barabasi_albert_graph(int(args[1]), int(args[2]))
-    print(G.edges())
+    # print(G.edges())
     # 外部出力
     if os.path.exists('.edges'):
         os.remove('.edges')
     with open('.edges', 'w') as f:
         for l in G.edges():
             f.write(str(l) + "\n")
+    networkx.draw(G, with_labels=True)
+    pngpath = "topo_ba" + \
+        args[1] + "_" + args[1] + ".png"
+    pyplot.savefig(pngpath)
     return G.edges()
 
 
