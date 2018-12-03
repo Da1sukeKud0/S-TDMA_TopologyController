@@ -18,7 +18,8 @@ class RTC
   def setSchedule(initial_phase, route)
     @initial_phase = initial_phase
     @route = route
-    puts "ip= #{initial_phase}, route= #{route}"
+    # puts "ip= #{initial_phase}, route= #{route}"
+    puts "route= #{route}"
     return self
   end
 end

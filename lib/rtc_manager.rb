@@ -102,7 +102,7 @@ class RTCManager
         return false
       end
     else ## 既存のrtcがある場合
-      puts "old_lcm is #{@lcm}"
+      # puts "old_lcm is #{@lcm}"
       ## 計算用のtmp_timeslot_tableに@timeslot_tableを複製(倍率はadd_period?に従う)
       tmp_timeslot_table = Hash.new { |hash, key| hash[key] = [] }
       @timeslot_table.each do |timeslot, exist_rtcs|
@@ -174,7 +174,7 @@ class RTCManager
         # puts "#{each[:switch_a][:dpid]} to #{each[:switch_b][:dpid]} link add"
       end
     end
-    puts "nodes = #{map.nodes}"
+    # puts "nodes = #{map.nodes}"
     return map
   end
 
@@ -200,12 +200,12 @@ class RTCManager
     puts "plist is #{@period_list}"
     if (@period_list.size == 0)
       @lcm = period
-      puts "lcm is #{@lcm}"
+      # puts "lcm is #{@lcm}"
       return 1
     else
       old_lcm = @lcm
       res = (@lcm.lcm(period)) / old_lcm
-      puts "#{res} bai !"
+      # puts "#{res} bai !"
     end
     return res
   end
@@ -225,7 +225,7 @@ class RTCManager
       puts "timeslot all delete"
     else
       old_lcm = @lcm
-      puts "minus #{old_lcm / calc_lcm} bai !"
+      # puts "minus #{old_lcm / calc_lcm} bai !"
     end
   end
 
@@ -236,14 +236,14 @@ class RTCManager
       puts "0"
       return 0
     elsif (@period_list.size == 1)
-      puts @period_list[0]
+      # puts @period_list[0]
       return @period_list[0]
     else
       @lcm = 1
       for i in Range.new(0, @period_list.size - 1)
         @lcm = @lcm.lcm(@period_list[i])
       end
-      puts "lcm is #{@lcm}"
+      # puts "lcm is #{@lcm}"
       return @lcm
     end
   end

@@ -28,7 +28,7 @@ class Dijkstra
     end
     unconnect_graph(src, dst)
     unconnect_graph(dst, src)
-    puts "delete#{src}to#{dst}"
+    # puts "delete#{src}to#{dst}"
   end
 
   def unconnect_graph(src, dst)
@@ -78,7 +78,7 @@ class Dijkstra
     dst = dst.to_s
     ## src,dst各ノードの存在確認
     if (!@nodes.include?(src) || !@nodes.include?(dst))
-      puts "such node is not exist."
+      # puts "such node is not exist."
       return false
     end
     ## 経路の解を格納
@@ -99,7 +99,7 @@ class Dijkstra
       return false
     end
     # end
-    puts "solved path is #{@solved_path}"
+    # puts "solved path is #{@solved_path}"
     return @solved_path
   end
 
