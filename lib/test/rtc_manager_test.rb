@@ -5,31 +5,36 @@ require "open3"
 require "json"
 
 class RTCManagerTest
-  def initialize
+  def initialize()
     @rtcManager = RTCManager.new
     @topo = []
-    @hosts = Hash.new { [].freeze } ## hosts{}: keyはホストのmac_address
+    @hosts = Hash.new { [].freeze } ## {mac_address=>Host,,,}
+    @edges = []
+  end
 
-    edges = []
-    switchNum = ARGV[0].to_i
-    sh ("python ~/trema/topology/lib/test/barabasi_albert_graph.py #{switchNum} #{ARGV[1]}")
+  def make_ba_topology(switchNum, complexity)
+    switchNum = switchNum.to_i
+    complexity = complexity.to_i
+    ## barabasi_albert_graph.pyを外部実行
+    sh ("python ~/trema/topology/lib/test/barabasi_albert_graph.py #{switchNum} #{complexity}")
+    ## @edgesに生成されたリンクを格納
     File.open(".edges") do |file|
       file.each_line do |l|
         str = l[1..l.size - 3].split(", ")
         str[0] = str[0].to_i + 1
         str[1] = str[1].to_i + 1
-        edges.push(str)
+        @edges.push(str)
       end
     end
-    edges.each do |src, dst|
-      puts "src: #{src}, dst: #{dst}"
+    ## @edgesからs2sリンクを生成
+    @edges.each do |src, dst|
+      # puts "src: #{src}, dst: #{dst}"
       add_switch2switch_link(src, dst)
     end
-    for i in Range.new(1, switchNum)
-      # mac_address = [0x52, 0x42, 0x00, Random.rand(0x7f), Random.rand(0xff), Random.rand(0xff)]
-      mac_address = "mac" + i.to_s
-      maybe_add_host(mac_address, i)
-    end
+    ## switchNum個のホストを同番のスイッチに接続
+    make_host(switchNum)
+
+    ## スケジューリング探索の実行
     startwatch("add_rtc?呼び出し")
     @rtcManager.add_rtc?(@hosts["mac1"], @hosts["mac6"], 5, @topo)
     stopwatch("スケジューリング可")
@@ -37,7 +42,14 @@ class RTCManagerTest
     # @rtcManager.add_rtc?(16, 8, 2, @topo)
   end
 
-  def create_new_topology(switchNum, complexity)
+  private
+
+  def make_host(switchNum)
+    for i in Range.new(1, switchNum)
+      # mac_address = [0x52, 0x42, 0x00, Random.rand(0x7f), Random.rand(0xff), Random.rand(0xff)]
+      mac_address = "mac" + i.to_s
+      maybe_add_host(mac_address, i)
+    end
   end
 
   def maybe_add_host(mac_address, dpid)
@@ -96,5 +108,11 @@ def sh(command)
 end
 
 if __FILE__ == $0
-  rtcManagerTest = RTCManagerTest.new
+  if (ARGV[0].nil? || ARGV[1].nil?)
+    puts "usage: ruby rtc_manager_test.rb switchNum complexity"
+    ARGV[0] = 30
+    ARGV[1] = 2
+  end
+  rmt = RTCManagerTest.new
+  rmt.make_ba_topology(ARGV[0], ARGV[1])
 end
