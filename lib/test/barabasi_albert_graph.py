@@ -21,8 +21,7 @@ def main():
         for l in G.edges():
             f.write(str(l) + "\n")
     networkx.draw(G, with_labels=True)
-    pngpath = "topo_ba" + \
-        args[1] + "_" + args[1] + ".png"
+    pngpath = ".topo_ba.png"
     pyplot.savefig(pngpath)
     return G.edges()
 
