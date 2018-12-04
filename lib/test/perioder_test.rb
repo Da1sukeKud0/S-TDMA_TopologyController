@@ -1,3 +1,5 @@
+## RTCManager内でのrtcの周期関連の処理をテストするためのスクリプト
+## 
 class Perioder
   attr_reader :lcm
 
