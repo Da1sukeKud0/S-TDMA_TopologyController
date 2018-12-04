@@ -1,7 +1,5 @@
 require_relative "../rtc_manager"
 require_relative "../host"
-require "networkx"
-require "open3"
 require "json"
 
 class RTCManagerTest
@@ -21,8 +19,8 @@ class RTCManagerTest
     File.open(".edges") do |file|
       file.each_line do |l|
         str = l[1..l.size - 3].split(", ")
-        str[0] = str[0].to_i + 1
-        str[1] = str[1].to_i + 1
+        # str[0] = str[0].to_i + 1
+        # str[1] = str[1].to_i + 1
         @edges.push(str)
       end
     end
@@ -119,7 +117,7 @@ end
 if __FILE__ == $0
   if (ARGV[0].nil? || ARGV[1].nil?)
     puts "usage: ruby rtc_manager_test.rb switchNum complexity"
-    ARGV[0] = 30
+    ARGV[0] = 20
     ARGV[1] = 2
   end
   rmt = RTCManagerTest.new
