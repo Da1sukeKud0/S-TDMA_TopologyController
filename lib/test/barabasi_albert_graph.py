@@ -26,8 +26,8 @@ def main():
         e[0] += 1
         e[1] += 1
         edges.append(tuple(e))
-    sorted(edges,key=lambda e:(e[0],e[1]))
-    print edges
+    sorted(edges, key=lambda e: (e[0], e[1]))
+    print(edges)
     # edgesから無向グラフ作成
     G = networkx.Graph()
     G.add_edges_from(edges)
