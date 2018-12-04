@@ -35,12 +35,11 @@ def main():
     if os.path.exists('.edges'):
         os.remove('.edges')
     with open('.edges', 'w') as f:
-        for l in G.edges():
+        for l in sorted(G.edges(), key=lambda e: (e[0], e[1])):
             f.write(str(l) + "\n")
-    networkx.draw(G, with_labels=True)
+    # networkx.nx_agraph.view_pygraphviz(G, prog='dot')
+    networkx.draw(G, prog="dot", with_labels=True)
     pngpath = ".topo_ba.png"
-    networkx.nx_agraph.pygraphviz_layout(G, prog='fdp')
-    pyplot.tight_layout
     pyplot.savefig(pngpath)
 
 
