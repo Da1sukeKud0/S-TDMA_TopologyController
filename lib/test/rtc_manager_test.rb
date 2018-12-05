@@ -71,7 +71,7 @@ class RTCManagerTest
       # r.store("snum", @switchNum) ## スイッチ数
       # r.store("complexity", @complexity) ## 複雑度
       # r.store("rnum", num) ## RTC数
-      r.store("lnum", @edges.size) ## リンク数
+      # r.store("lnum", @edges.size) ## リンク数(switchNum-complexity)*complexityで算出可能
       r.store("turn", n) ## RTC実行順
       r.store("time", time) ## 処理時間
       r.store("tf", tf) ## add_rtc?
