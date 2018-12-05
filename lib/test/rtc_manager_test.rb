@@ -10,12 +10,14 @@ class RTCManagerTest
     @edges = []
   end
 
+  ## main
   ## BAモデルに基づいたトポロジの生成
-  def make_ba_topology(switchNum, complexity)
+  def make_ba_topology(switchNum, complexity, rtcNum)
     @switchNum = switchNum.to_i
+    @rtcNum = rtcNum.to_i
     ## barabasi_albert_graph.pyを外部実行
     sh ("python ~/trema/topology/lib/test/barabasi_albert_graph.py #{@switchNum} #{complexity}")
-    ## @edgesに生成されたリンクを格納
+    ## 生成されたリンクを@edgesに格納
     File.open(".edges") do |file|
       file.each_line do |l|
         str = l[1..l.size - 3].split(", ")
@@ -30,17 +32,28 @@ class RTCManagerTest
       add_switch2switch_link(src, dst)
     end
     ## switchNum個のホストを同番のスイッチに接続
-    make_host(@switchNum)
+    make_host()
   end
 
+  ## main
   ## 指定回数のスケジューリング探索の実行
   def add_rtcs(num)
+    ## 重複しないようにnum回分のsrc,dstをランダムに選択(periodは重複可)
+    srcList = []
+    dstList = []
+    l = Array.new(@switchNum) { |index| index + 1 }
+    puts l
+    popMax = @switchNum
     num.times do
-      src = rand(@switchNum) + 1
-      dst = rand(@switchNum) + 1
-      while (src == dst)
-        dst = rand(@switchNum) + 1
-      end
+      srcList.push(l.delete_at(rand(popMax)))
+      popMax -= 1
+      dstList.push(l.delete_at(rand(popMax)))
+      popMax -= 1
+    end
+    ## num回分探索
+    num.times do
+      src = srcList.pop
+      dst = dstList.pop
       period = rand(4) + 2
       puts "add_rtc?(src: h#{src}, dst: h#{dst}, period: #{period})"
       startwatch("add_rtc?呼び出し")
@@ -51,8 +64,8 @@ class RTCManagerTest
 
   private
 
-  def make_host(switchNum)
-    for i in Range.new(1, switchNum)
+  def make_host()
+    for i in Range.new(1, @switchNum)
       # mac_address = [0x52, 0x42, 0x00, Random.rand(0x7f), Random.rand(0xff), Random.rand(0xff)]
       mac_address = "mac" + i.to_s
       maybe_add_host(mac_address, i)
@@ -68,17 +81,6 @@ class RTCManagerTest
     add_switch2host_link(h)
   end
 
-  ## @topoにs2sのリンクを追加する関数
-  ##
-  def add_switch2switch_link(dpid_a, dpid_b)
-    l = Hash.new { [].freeze }
-    l.store(:type, "switch2switch")
-    ## swtich_a,switch_b各々へdpidとport_noの格納
-    l.store(:switch_a, {dpid: dpid_a, port_no: "s" + dpid_a.to_s + "to" + dpid_b.to_s})
-    l.store(:switch_b, {dpid: dpid_b, port_no: "s" + dpid_b.to_s + "to" + dpid_a.to_s})
-    @topo.push(l)
-  end
-
   ## @topoにs2hのリンクを追加する関数
   ##
   def add_switch2host_link(hostStats) ##hostStatsはHost型
@@ -88,6 +90,17 @@ class RTCManagerTest
     l.store(:switch_a, {dpid: hostStats.dpid, port_no: hostStats.port_no})
     ## Host
     l.store(:host, hostStats)
+    @topo.push(l)
+  end
+
+  ## @topoにs2sのリンクを追加する関数
+  ##
+  def add_switch2switch_link(dpid_a, dpid_b)
+    l = Hash.new { [].freeze }
+    l.store(:type, "switch2switch")
+    ## swtich_a,switch_b各々へdpidとport_noの格納
+    l.store(:switch_a, {dpid: dpid_a, port_no: "s" + dpid_a.to_s + "to" + dpid_b.to_s})
+    l.store(:switch_b, {dpid: dpid_b, port_no: "s" + dpid_b.to_s + "to" + dpid_a.to_s})
     @topo.push(l)
   end
 
@@ -117,10 +130,11 @@ end
 if __FILE__ == $0
   if (ARGV[0].nil? || ARGV[1].nil?)
     puts "usage: ruby rtc_manager_test.rb switchNum complexity"
-    ARGV[0] = 20
+    ARGV[0] = 30
     ARGV[1] = 2
+    ARGV[2] = 3
   end
   rmt = RTCManagerTest.new
-  rmt.make_ba_topology(ARGV[0], ARGV[1])
+  rmt.make_ba_topology(ARGV[0], ARGV[1], ARGV[2])
   rmt.add_rtcs(3)
 end
