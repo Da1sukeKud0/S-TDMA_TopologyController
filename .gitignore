@@ -28,3 +28,4 @@ bin/bundle
 lib/test/.edges
 .edges
 .topo_ba*
+BA_*
