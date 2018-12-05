@@ -164,6 +164,6 @@ if __FILE__ == $0
     puts res
     output.push(res)
   end
-  filename = "BA_s#{ARGV[0]}_cplx#{ARGV[1]}_rtc#{ARGV[3]}"
+  file_name = "BA_s#{ARGV[0]}_cplx#{ARGV[1]}_rtc#{ARGV[3]}"
   output_json(file_name, output)
 end
