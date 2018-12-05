@@ -165,6 +165,6 @@ if __FILE__ == $0
       output.push(each)
     end
   end
-  file_name = "BA_s#{ARGV[0]}_cplx#{ARGV[1]}_rtc#{ARGV[3]}.json"
+  file_name = "BA_s#{ARGV[0]}_cplx#{ARGV[1]}_rtc#{ARGV[2]}.json"
   output_json(file_name, output)
 end
