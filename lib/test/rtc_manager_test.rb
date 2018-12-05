@@ -52,7 +52,7 @@ class RTCManagerTest
       popMax -= 1
     end
     ## num回分探索
-    result = []
+    result = [] ## num回分の探索結果を格納
     for n in Range.new(1, num)
       src = srcList.pop
       dst = dstList.pop
@@ -155,15 +155,16 @@ if __FILE__ == $0
     ARGV[1] = 2
     ARGV[2] = 3
   end
-
   output = []
   50.times do
     rmt = RTCManagerTest.new
     rmt.make_ba_topology(ARGV[0], ARGV[1])
     res = rmt.add_rtcs(ARGV[2])
     puts res
-    output.push(res)
+    res.each do |each|
+      output.push(each)
+    end
   end
-  file_name = "BA_s#{ARGV[0]}_cplx#{ARGV[1]}_rtc#{ARGV[3]}"
+  file_name = "BA_s#{ARGV[0]}_cplx#{ARGV[1]}_rtc#{ARGV[3]}.json"
   output_json(file_name, output)
 end
