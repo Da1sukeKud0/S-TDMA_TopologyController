@@ -71,12 +71,34 @@ def test5
   @period_list = []
 end
 
-h = { "def" => 2, "ghi" => 1, "abc" => 3 }
-p h.sort.to_h
-p "h is #{h}"
-p h.sort.reverse.to_h
-p "h is #{h}"
-p h.sort_by{ | k, v | v }.to_h
-p "h is #{h}"
-p h.sort{ | a, b | b[1] <=> a[1] }.to_h
-p "h is #{h}"
+def test6
+  h = {"def" => 2, "ghi" => 1, "abc" => 3}
+  p h.sort.to_h
+  p "h is #{h}"
+  p h.sort.reverse.to_h
+  p "h is #{h}"
+  p h.sort_by { |k, v| v }.to_h
+  p "h is #{h}"
+  p h.sort { |a, b| b[1] <=> a[1] }.to_h
+  p "h is #{h}"
+end
+
+def test7
+  ##initialize
+  @switchNum = 30
+  num = 3
+  ## main
+  srcList = []
+  dstList = []
+  l = Array.new(@switchNum) { |index| index + 1 }
+  puts l
+  popMax = @switchNum
+  num.times do
+    srcList.push(l.delete_at(rand(popMax)))
+    popMax -= 1
+    dstList.push(l.delete_at(rand(popMax)))
+    popMax -= 1
+  end
+  puts "srcList: #{srcList}"
+  puts "dstList: #{dstList}"
+end
