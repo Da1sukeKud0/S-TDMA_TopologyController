@@ -141,8 +141,8 @@ def sh(command)
   @logger.debug(command) if @logger
 end
 
-def output_json(filename, hash)
-  File.open(filename, "a") do |file|
+def output_json(file_name, hash)
+  File.open(file_name, "a") do |file|
     JSON.dump(hash, file)
   end
 end
@@ -165,5 +165,5 @@ if __FILE__ == $0
     output.push(res)
   end
   filename = "BA_s#{ARGV[0]}_cplx#{ARGV[1]}_rtc#{ARGV[3]}"
-  output_json(filename, output)
+  output_json(file_name, output)
 end
