@@ -142,7 +142,7 @@ def sh(command)
 end
 
 def output_json(file_name, hash)
-  File.open(file_name, "a") do |file|
+  File.open(file_name, "w") do |file|
     JSON.dump(hash, file)
   end
 end
