@@ -156,7 +156,7 @@ if __FILE__ == $0
     ARGV[2] = 3
   end
   output = []
-  50.times do
+  10.times do
     rmt = RTCManagerTest.new
     rmt.make_ba_topology(ARGV[0], ARGV[1])
     res = rmt.add_rtcs(ARGV[2])
