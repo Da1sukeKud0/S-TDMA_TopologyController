@@ -15,9 +15,9 @@ class JsonHelper:
             if (d["turn"] not in turn):
                 turn[d["turn"]] = []
             turn[d["turn"]].append(d["time"])
-        self.ave(turn)
+        self.__ave(turn)
 
-    def ave(self, dic):
+    def __ave(self, dic):
         for k, v in dic.items():
             ave = sum(v)/len(v)
             print("key: " + str(k) + ", ave: " + str(ave))
