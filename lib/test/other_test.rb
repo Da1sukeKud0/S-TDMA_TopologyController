@@ -102,3 +102,46 @@ def test7
   puts "srcList: #{srcList}"
   puts "dstList: #{dstList}"
 end
+
+def test8(depth, fanout)
+  @depth = depth.to_i
+  @fanout = fanout.to_i
+  @edges = []
+  ## ツリートポロジを生成
+  node = 1
+  papa = [], child = [1]
+  (@depth - 1).times do
+    papa = child.clone
+    child = []
+    for p in papa
+      @fanout.times do
+        node += 1
+        @edges.push([p, node])
+        # add_switch2switch_link(papa, node)
+        puts "add link: #{p} to #{node}"
+        child.push(node)
+      end
+    end
+  end
+  @switchNum = node
+  # for c in child
+  #   @fanout.times do
+  #     node += 1
+
+  #     # add_switch2switch_link(papa, node)
+  #     puts "add link: #{p} to #{node}"
+  #     child.push(node)
+  #   end
+  # end
+
+  ## debug
+  puts @edges
+  puts "lnum"
+  puts @edges.size
+  puts "snum"
+  puts @switchNum
+  puts "hnum"
+  puts child
+end
+
+test8(4, 3)
