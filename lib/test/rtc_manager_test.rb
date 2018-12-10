@@ -37,14 +37,50 @@ class RTCManagerTest
   end
 
   ## main
+  ## ツリートポロジを生成
+  def make_tree_topology(depth, fanout)
+    @depth = depth.to_i
+    @fanout = fanout.to_i
+    node = 1
+    papa = [], child = [1]
+    ## ホストまで含めたツリーの深さなので@depth - 1でループ
+    (@depth - 1).times do
+      papa = child
+      child = []
+      ## 親ノードに@fanout個の子ノードを接続
+      for p in papa
+        @fanout.times do
+          node += 1
+          @edges.push([p, node])
+          puts "add link: #{p} to #{node}"
+          add_switch2switch_link(p, node)
+          child.push(node)
+        end
+      end
+    end
+    @switchNum = node
+    ## 最も若いノードにそれぞれfanout個のホストを付加
+    hnode = 0
+    for c in child
+      @fanout.times do
+        hnode += 1
+        mac_address = "mac" + hnode.to_s
+        maybe_add_host(mac_address, c)
+        puts "add link: #{c} to host#{hnode.to_s}"
+      end
+    end
+    @hstNum = hnode
+  end
+
+  ## main
   ## 指定回数のスケジューリング探索の実行
   def add_rtcs(num)
     num = num.to_i
     ## 重複しないようにnum回分のsrc,dstをランダムに選択(periodは重複可)
     srcList = []
     dstList = []
-    l = Array.new(@switchNum) { |index| index + 1 }
-    popMax = @switchNum
+    l = Array.new(@hstNum) { |index| index + 1 }
+    popMax = @hstNum
     num.times do
       srcList.push(l.delete_at(rand(popMax)))
       popMax -= 1
@@ -67,14 +103,19 @@ class RTCManagerTest
 
       ## 計測結果をresultに格納
       r = Hash.new
-      # r.store("type", @type) ## トポロジタイプ
-      # r.store("snum", @switchNum) ## スイッチ数
-      # r.store("complexity", @complexity) ## 複雑度
-      # r.store("rnum", num) ## RTC数
-      # r.store("lnum", @edges.size) ## リンク数(switchNum-complexity)*complexityで算出可能
+      r.store("type", @type) ## トポロジタイプ
+      r.store("snum", @switchNum) ## スイッチ数
+      r.store("rnum", num) ## RTC数
+      r.store("lnum", @edges.size) ## リンク数(switchNum-complexity)*complexityで算出可能
       r.store("turn", n) ## RTC実行順
       r.store("time", time) ## 処理時間
       r.store("tf", tf) ## add_rtc?
+      if (@type == "BA")
+        r.store("cplx", @complexity) ## 複雑度
+      elsif (@type == "tree")
+        r.store("dep", @depth)
+        r.store("fot", @fanout)
+      end
       result.push(r)
     end
     return result
@@ -88,6 +129,7 @@ class RTCManagerTest
       mac_address = "mac" + i.to_s
       maybe_add_host(mac_address, i)
     end
+    @hstNum = @switchNum
   end
 
   def maybe_add_host(mac_address, dpid)
@@ -147,7 +189,7 @@ def output_json(file_name, hash)
   end
 end
 
-if __FILE__ == $0
+def test_arg_from_console()
   if (ARGV[0].nil? || ARGV[1].nil?)
     puts "usage: ruby rtc_manager_test.rb switchNum complexity rtcNum"
     puts "use default parameter: switchNum = 30, complexity = 2, rtcNum = 3"
@@ -156,7 +198,7 @@ if __FILE__ == $0
     ARGV[2] = 3
   end
   output = []
-  10.times do
+  20.times do
     rmt = RTCManagerTest.new
     rmt.make_ba_topology(ARGV[0], ARGV[1])
     res = rmt.add_rtcs(ARGV[2])
@@ -167,4 +209,43 @@ if __FILE__ == $0
   end
   file_name = "BA_s#{ARGV[0]}_cplx#{ARGV[1]}_rtc#{ARGV[2]}.json"
   output_json(file_name, output)
+end
+
+def test_ba_loop()
+  # BA topology(loop)
+  output = []
+  snum = 60
+  9.times do
+    cplx = 1
+    5.times do
+      30.times do
+        rmt = RTCManagerTest.new
+        rmt.make_ba_topology(snum, cplx)
+        res = rmt.add_rtcs(5)
+        puts res
+        res.each do |each|
+          output.push(each)
+        end
+      end
+      cplx += 1
+    end
+    snum += 5
+  end
+  file_name = "rtcm_test_20181210_2.json"
+  output_json(file_name, output)
+end
+
+def test_tree()
+  ## tree topology
+  # output = []
+  rmt = RTCManagerTest.new
+  rmt.make_tree_topology(4, 3)
+  res = rmt.add_rtcs(3)
+  puts res
+  # file_name = "rtcm_test_20181210_2.json"
+  # output_json(file_name, output)
+end
+
+if __FILE__ == $0
+  test_tree()
 end
