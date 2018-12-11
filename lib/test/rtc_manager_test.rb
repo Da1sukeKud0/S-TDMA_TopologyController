@@ -39,6 +39,7 @@ class RTCManagerTest
   ## main
   ## ツリートポロジを生成
   def make_tree_topology(depth, fanout)
+    @type = "tree"
     @depth = depth.to_i
     @fanout = fanout.to_i
     node = 1
@@ -52,7 +53,7 @@ class RTCManagerTest
         @fanout.times do
           node += 1
           @edges.push([p, node])
-          puts "add link: #{p} to #{node}"
+          # puts "add link: #{p} to #{node}"
           add_switch2switch_link(p, node)
           child.push(node)
         end
@@ -66,10 +67,27 @@ class RTCManagerTest
         hnode += 1
         mac_address = "mac" + hnode.to_s
         maybe_add_host(mac_address, c)
-        puts "add link: #{c} to host#{hnode.to_s}"
+        # puts "add link: #{c} to host#{hnode.to_s}"
       end
     end
     @hstNum = hnode
+  end
+
+  ## main
+  ## フルメッシュトポロジを生成
+  def make_fullmesh_topology(switchNum)
+    @type = "fullmesh"
+    @switchNum = switchNum.to_i
+    for src in Range.new(1, @switchNum)
+      for dst in Range.new(1, @switchNum)
+        next if (src == dst)
+        puts "add link: #{src} to #{dst}"
+        add_switch2switch_link(src, dst)
+      end
+      mac_address = "mac" + src.to_s
+      maybe_add_host(mac_address, src)
+    end
+    @hstNum = @switchNum
   end
 
   ## main
@@ -95,11 +113,10 @@ class RTCManagerTest
       period = rand(4) + 2
       puts ""
       puts "add_rtc?(src: h#{src}, dst: h#{dst}, period: #{period})"
-      # startwatch("add_rtc?呼び出し")
+      # 以下でスケジューリング処理の時間を計測
       st = Time.now
       tf = @rtcManager.add_rtc?(@hosts["mac" + src.to_s], @hosts["mac" + dst.to_s], period, @topo)
       puts time = (Time.now - st)
-      # stopwatch("スケジューリング終了")
 
       ## 計測結果をresultに格納
       r = Hash.new
@@ -114,7 +131,7 @@ class RTCManagerTest
         r.store("cplx", @complexity) ## 複雑度
       elsif (@type == "tree")
         r.store("dep", @depth)
-        r.store("fot", @fanout)
+        r.store("fan", @fanout)
       end
       result.push(r)
     end
@@ -161,21 +178,6 @@ class RTCManagerTest
     l.store(:switch_b, {dpid: dpid_b, port_no: "s" + dpid_b.to_s + "to" + dpid_a.to_s})
     @topo.push(l)
   end
-
-  ## タイマー
-  def startwatch(tag)
-    @timer = Time.now
-    @old_tag = tag
-  end
-
-  ## 前回の呼び出しからの経過時間を測定
-  def stopwatch(tag)
-    if @timer
-      puts ""
-      puts "during time of #{@old_tag} to #{tag}: #{Time.now - @timer}"
-      puts ""
-    end
-  end
 end
 
 def sh(command)
@@ -189,6 +191,7 @@ def output_json(file_name, hash)
   end
 end
 
+## 端末から各種パラメータを指定して実行
 def test_arg_from_console()
   if (ARGV[0].nil? || ARGV[1].nil?)
     puts "usage: ruby rtc_manager_test.rb switchNum complexity rtcNum"
@@ -211,8 +214,8 @@ def test_arg_from_console()
   output_json(file_name, output)
 end
 
+## BAモデルでの各種パラメータを自動設定し実行
 def test_ba_loop()
-  # BA topology(loop)
   output = []
   snum = 60
   9.times do
@@ -235,11 +238,22 @@ def test_ba_loop()
   output_json(file_name, output)
 end
 
+## ツリートポロジでの各種パラメータを設定し実行
 def test_tree()
-  ## tree topology
   # output = []
   rmt = RTCManagerTest.new
   rmt.make_tree_topology(4, 3)
+  res = rmt.add_rtcs(3)
+  puts res
+  # file_name = "rtcm_test_20181210_2.json"
+  # output_json(file_name, output)
+end
+
+## フルメッシュトポロジでの各種パラメータを設定し実行
+def test_fullmesh()
+  # output = []
+  rmt = RTCManagerTest.new
+  rmt.make_fullmesh_topology(6)
   res = rmt.add_rtcs(3)
   puts res
   # file_name = "rtcm_test_20181210_2.json"
