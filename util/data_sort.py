@@ -3,9 +3,8 @@
 import json
 import numpy
 from matplotlib import pyplot
-from matplotlib.font_manager import FontProperties
-fp = FontProperties(
-    fname="/usr/share/fonts/truetype/fonts-japanese-gothic.ttf")
+# from matplotlib.font_manager import FontProperties
+# fp = FontProperties(fname = "/usr/share/fonts/truetype/fonts-japanese-gothic.ttf")
 
 
 class JsonHelper:
@@ -35,8 +34,8 @@ class JsonHelper:
             d = [k, ave]
             arr.append(d)
         pyplot.plot([i[0] for i in arr], [i[1] for i in arr], "o")
-        pyplot.ylabel(u'during time [s]', fontproperties=fp)
-        pyplot.xlabel(u'xlabel', fontproperties=fp)
+        pyplot.ylabel(u'during time [s]')  # , fontproperties=fp)
+        pyplot.xlabel(u'xlabel')  # , fontproperties=fp)
         # pyplot.xticks(
         # [1.25, 2.25], [u'目盛りは', 'fontproperties=fp'], fontproperties=fp)
         # pyplot.title(u'タイトルはfontproperties=fp', fontproperties=fp)
