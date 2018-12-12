@@ -27,13 +27,14 @@ class JsonHelper:
         self.__ave(result)
 
     def __ave(self, dic):
-        arr = []
+        xval = []
+        yval = []
         for k, v in sorted(dic.items(), key=lambda x: x[0]):
             ave = sum(v)/len(v)
             print("key: " + str(k) + ", ave: " + str(ave))
-            d = [k, ave]
-            arr.append(d)
-        pyplot.plot([i[0] for i in arr], [i[1] for i in arr], "o")
+            xval.append(k)
+            yval.append(ave)
+        pyplot.plot(xval, yval, "o")
         pyplot.ylabel(u'during time [s]')  # , fontproperties=fp)
         pyplot.xlabel(u'xlabel')  # , fontproperties=fp)
         # pyplot.xticks(
@@ -64,7 +65,7 @@ result.push(r)
 if (@type == "BA")
     r.store("cplx", @complexity) ## 複雑度
 elsif (@type == "tree")
-    r.store("dep", @depth)
-    r.store("fot", @fanout)
+    r.store("dep", @depth) ## 深さ(ホストの階層を含む)
+    r.store("fan", @fanout) ## 1つの親ノードに接続する子ノードの数
 end
 """
