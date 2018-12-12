@@ -22,8 +22,6 @@ class RTCManagerTest
     File.open(".edges") do |file|
       file.each_line do |l|
         str = l[1..l.size - 3].split(", ")
-        # str[0] = str[0].to_i + 1
-        # str[1] = str[1].to_i + 1
         @edges.push(str)
       end
     end
@@ -70,7 +68,6 @@ class RTCManagerTest
         # puts "add link: #{c} to host#{hnode.to_s}"
       end
     end
-    @hstNum = hnode
   end
 
   ## main
@@ -87,7 +84,6 @@ class RTCManagerTest
       mac_address = "mac" + src.to_s
       maybe_add_host(mac_address, src)
     end
-    @hstNum = @switchNum
   end
 
   ## main
@@ -97,16 +93,30 @@ class RTCManagerTest
     ## 重複しないようにnum回分のsrc,dstをランダムに選択(periodは重複可)
     srcList = []
     dstList = []
-    l = Array.new(@hstNum) { |index| index + 1 }
-    popMax = @hstNum
+    l = Array.new(@hosts.size) { |index| index + 1 }
+    popMax = @hosts.size
     num.times do
       srcList.push(l.delete_at(rand(popMax)))
       popMax -= 1
       dstList.push(l.delete_at(rand(popMax)))
       popMax -= 1
     end
+
+    ## num回分探索の準備
+    result = [] ## num回分の探索結果を格納 [r, r, ... , r]
+    tagList = Hash.new ## データのタグリスト(rtcの実行順(turn)を除く)
+    tagList.store("type", @type) ## トポロジタイプ
+    tagList.store("snum", @switchNum) ## スイッチ数
+    tagList.store("rnum", num) ## RTC数
+    tagList.store("lnum", @edges.size) ## リンク数(switchNum-complexity)*complexityで算出可能
+    if (@type == "BA")
+      tagList.store("cplx", @complexity) ## 複雑度
+    elsif (@type == "tree")
+      tagList.store("dep", @depth)
+      tagList.store("fan", @fanout)
+    end
+
     ## num回分探索
-    result = [] ## num回分の探索結果を格納
     for n in Range.new(1, num)
       src = srcList.pop
       dst = dstList.pop
@@ -117,22 +127,11 @@ class RTCManagerTest
       st = Time.now
       tf = @rtcManager.add_rtc?(@hosts["mac" + src.to_s], @hosts["mac" + dst.to_s], period, @topo)
       puts time = (Time.now - st)
-
       ## 計測結果をresultに格納
-      r = Hash.new
-      r.store("type", @type) ## トポロジタイプ
-      r.store("snum", @switchNum) ## スイッチ数
-      r.store("rnum", num) ## RTC数
-      r.store("lnum", @edges.size) ## リンク数(switchNum-complexity)*complexityで算出可能
+      r = tagList.clone
       r.store("turn", n) ## RTC実行順
       r.store("time", time) ## 処理時間
       r.store("tf", tf) ## add_rtc?
-      if (@type == "BA")
-        r.store("cplx", @complexity) ## 複雑度
-      elsif (@type == "tree")
-        r.store("dep", @depth)
-        r.store("fan", @fanout)
-      end
       result.push(r)
     end
     return result
@@ -146,7 +145,6 @@ class RTCManagerTest
       mac_address = "mac" + i.to_s
       maybe_add_host(mac_address, i)
     end
-    @hstNum = @switchNum
   end
 
   def maybe_add_host(mac_address, dpid)
@@ -215,7 +213,7 @@ def test_arg_from_console()
 end
 
 ## BAモデルでの各種パラメータを自動設定し実行
-def test_ba_loop()
+def test_BA_loop()
   output = []
   snum = 60
   9.times do
@@ -236,6 +234,17 @@ def test_ba_loop()
   end
   file_name = "rtcm_test_20181210_2.json"
   output_json(file_name, output)
+end
+
+## BAモデルに基づくランダムトポロジでの各種パラメータを設定し実行
+def test_BA()
+  # output = []
+  rmt = RTCManagerTest.new
+  rmt.make_ba_topology(30, 2)
+  res = rmt.add_rtcs(5)
+  puts res
+  # file_name = "rtcm_test_20181210_2.json"
+  # output_json(file_name, output)
 end
 
 ## ツリートポロジでの各種パラメータを設定し実行
