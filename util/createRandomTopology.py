@@ -35,13 +35,14 @@ def main():  # ランダムなトポロジを生成(Barabási-Albertモデルに
 
     # グラフをpngで出力
     networkx.draw(G, with_labels=True)
-    pngpath = "test/topo_image/ba_random_" + \
+    pngpath = "test/resource/topo_image/ba_random_" + \
         str(switchNum) + "_" + str(complexity) + ".png"
     pyplot.savefig(pngpath)
     # pyplot.show()
 
     # ファイルに出力
-    path = "test/ba_random_" + str(switchNum) + "_" + str(complexity) + ".conf"
+    path = "test/resource/ba_random_" + \
+        str(switchNum) + "_" + str(complexity) + ".conf"
     if os.path.exists(path):
         os.remove(path)
     with open(path, mode='w') as file:

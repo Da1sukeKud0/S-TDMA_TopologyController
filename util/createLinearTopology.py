@@ -22,7 +22,7 @@ def main():
     makeLink(switchNum)
 
     # set output file and write
-    path = "../test/linear_" + str(switchNum) + ".conf"
+    path = "test/resource/linear_" + str(switchNum) + ".conf"
     if os.path.exists(path):
         os.remove(path)
     with open(path, mode='w') as file:
