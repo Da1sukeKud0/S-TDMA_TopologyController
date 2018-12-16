@@ -144,4 +144,19 @@ def test8(depth, fanout)
   puts child
 end
 
-test8(4, 3)
+# test8(4, 3)
+
+def test9(a, b, msg = "shared")
+  if (msg=="shared")
+    test10(a,b,msg)
+  else
+    test10(a,b,msg)
+  end
+end
+
+def test10(a, b, msg = "shared")
+  puts msg
+end
+
+test9(1, 2)
+test9(1, 2, "exclusive")
